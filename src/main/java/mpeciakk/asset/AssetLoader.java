@@ -1,6 +1,9 @@
 package mpeciakk.asset;
 
+import com.google.gson.*;
+import mpeciakk.asset.data.BlockModelData;
 import mpeciakk.asset.data.ShadersData;
+import mpeciakk.world.block.BlockModel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -8,11 +11,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class AssetLoader {
 
     public final static AssetLoader INSTANCE = new AssetLoader();
+
+    private final Gson blockModelGson = new GsonBuilder().registerTypeAdapter(BlockModelData.class, new BlockModelDeserializer()).create();
 
     public void load() {
         loadShader("simple");
@@ -22,6 +31,8 @@ public class AssetLoader {
 
         loadImage("cobblestone");
         loadImage("dirt");
+
+        loadBlockModel("cobblestone");
     }
 
     public void loadShader(String shader) {
@@ -48,6 +59,15 @@ public class AssetLoader {
         }
 
         AssetManager.INSTANCE.register(AssetType.Image, texture, image);
+    }
+
+    private void loadBlockModel(String model) {
+        String basePath = "/models/block/";
+        String path = basePath + model + ".json";
+
+        BlockModelData blockModel = blockModelGson.fromJson(getTextFile(path), BlockModelData.class);
+
+        AssetManager.INSTANCE.register(AssetType.BlockModel, model, blockModel);
     }
 
     private String getTextFile(String path) {
@@ -80,6 +100,23 @@ public class AssetLoader {
             throw new IllegalArgumentException("File not found! (" + path + ")");
         } else {
             return inputStream;
+        }
+    }
+
+    public static class BlockModelDeserializer implements JsonDeserializer<BlockModelData> {
+
+        @Override
+        public BlockModelData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject textures = json.getAsJsonObject().get("textures").getAsJsonObject();
+            Set<String> textureKeys = textures.keySet();
+
+            Map<String, String> texturesMap = new HashMap<>();
+
+            for (String textureKey : textureKeys) {
+                texturesMap.put(textureKey, textures.get(textureKey).getAsString());
+            }
+
+            return new BlockModelData(json.getAsJsonObject().get("type").getAsString(), texturesMap);
         }
     }
 }

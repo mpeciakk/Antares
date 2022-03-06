@@ -2,12 +2,15 @@ package mpeciakk.world.chunk;
 
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
+import mpeciakk.asset.data.Texture;
 import mpeciakk.render.mesh.SimpleMesh;
 import mpeciakk.render.mesh.builder.SimpleMeshBuilder;
 import mpeciakk.util.Direction;
 import mpeciakk.world.World;
 import mpeciakk.world.block.Block;
+import mpeciakk.world.block.BlockModel;
 import mpeciakk.world.block.BlockPos;
+import mpeciakk.world.block.Blocks;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -41,7 +44,7 @@ public class Chunk {
     public void generateChunk() {
         for (int x = 0; x < CHUNK_SIZE; x++) {
             for (int z = 0; z < CHUNK_SIZE; z++) {
-                setBlock(x, (int) world.getNoise().generateHeight(x + this.x * CHUNK_SIZE, z + this.z * CHUNK_SIZE), z, new Block(1));
+                setBlock(x, (int) world.getNoise().generateHeight(x + this.x * CHUNK_SIZE, z + this.z * CHUNK_SIZE), z, Blocks.COBBLESTONE);
             }
         }
     }
@@ -84,7 +87,16 @@ public class Chunk {
                 Block upBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.UP));
                 Block downBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.DOWN));
 
-                meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, AssetManager.INSTANCE.get(AssetType.Texture, "cobblestone"), northBlock == null || northBlock.getType() == 0, southBlock == null || southBlock.getType() == 0, eastBlock == null || eastBlock.getType() == 0, westBlock == null || westBlock.getType() == 0, downBlock == null || downBlock.getType() == 0, upBlock == null || upBlock.getType() == 0);
+                BlockModel model = block.getModel();
+
+                Texture front = model.getTextures().get("front");
+                Texture back = model.getTextures().get("back");
+                Texture left = model.getTextures().get("left");
+                Texture right = model.getTextures().get("right");
+                Texture bottom = model.getTextures().get("bottom");
+                Texture top = model.getTextures().get("top");
+
+                meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, northBlock == null || northBlock.getType() == 0, southBlock == null || southBlock.getType() == 0, eastBlock == null || eastBlock.getType() == 0, westBlock == null || westBlock.getType() == 0, downBlock == null || downBlock.getType() == 0, upBlock == null || upBlock.getType() == 0);
             }
         }
 

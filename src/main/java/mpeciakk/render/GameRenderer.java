@@ -67,6 +67,8 @@ public class GameRenderer {
             selectedBlock = new BlockPos(hit.blockPos().getX(), hit.blockPos().getY(), hit.blockPos().getZ());
 
             world.getChunk(selectedBlock.getX() >> 4, selectedBlock.getZ() >> 4).setHighlightedBlock(new BlockPos(selectedBlock.getX() % 16, selectedBlock.getY() % 256, selectedBlock.getZ() % 16));
+        } else {
+            world.getChunk(selectedBlock.getX() >> 4, selectedBlock.getZ() >> 4).setHighlightedBlock(new BlockPos(2137, 2137, 2137));
         }
 
         if (client.getInputManager().isButtonPressed(1) && timer == 0) {

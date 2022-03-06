@@ -1,6 +1,11 @@
 {
-  "parent": "block/cube_all",
+  "type": "cube",
   "textures": {
-    "all": "blocks/cobblestone"
+    "front": "cobblestone",
+    "back": "cobblestone",
+    "left": "dirt",
+    "right": "dirt",
+    "bottom": "cobblestone",
+    "top": "dirt"
   }
 }

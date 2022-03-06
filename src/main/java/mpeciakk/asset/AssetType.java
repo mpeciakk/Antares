@@ -4,5 +4,6 @@ public enum AssetType {
     Shader,
     Image,
     Texture,
-    TextureAtlas
+    TextureAtlas,
+    BlockModel
 }
