@@ -1,6 +1,7 @@
 package mpeciakk.world;
 
 import mpeciakk.world.block.Block;
+import mpeciakk.world.block.BlockPos;
 import mpeciakk.world.chunk.Chunk;
 import mpeciakk.world.chunk.ChunkMeshState;
 import org.joml.Vector3i;
@@ -16,11 +17,9 @@ public class World {
     private final List<Chunk> chunks = new ArrayList<>();
     private final PerlinNoiseGenerator noise = new PerlinNoiseGenerator();
 
-    private int i = 0;
-
     public World() {
-        for (int x = 0; x < 32; x++) {
-            for (int z = 0; z < 32; z++) {
+        for (int x = 0; x < 4; x++) {
+            for (int z = 0; z < 4; z++) {
                 chunks.add(new Chunk(x, z, this));
             }
         }
@@ -36,15 +35,15 @@ public class World {
         }
     }
 
-    public Block getBlock(Vector3i position) {
-        int x = position.x >> 4;
-        int z = position.z >> 4;
+    public Block getBlock(BlockPos position) {
+        int x = position.getX() >> 4;
+        int z = position.getZ() >> 4;
 
         Chunk chunk = getChunk(x, z);
 
-        int blockX = position.x - x * Chunk.CHUNK_SIZE;
-        int blockY = position.y;
-        int blockZ = position.z - z * Chunk.CHUNK_SIZE;
+        int blockX = position.getX() - x * Chunk.CHUNK_SIZE;
+        int blockY = position.getY();
+        int blockZ = position.getZ() - z * Chunk.CHUNK_SIZE;
 
         if (chunk == null) {
             return new Block(0);

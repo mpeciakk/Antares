@@ -5,9 +5,12 @@ layout (location = 0) in int position;
 out vec2 out_textureCoords;
 out vec3 out_vertexPos;
 
+out float outline;
+
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 transformationMatrix;
+uniform ivec3 highlightedBlock;
 
 void main() {
     float x = position & 0x1F;
@@ -33,5 +36,30 @@ void main() {
         out_textureCoords = vec2(1.0 + col, 0.0 + row) / m;
     }
 
-    gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(x, y, z, 1);
+    if (
+        (highlightedBlock.x != 2137 && highlightedBlock.y != 2137 && highlightedBlock.z != 2137) && (
+            // 0, 0, 0
+            (x == highlightedBlock.x && y == highlightedBlock.y && z == highlightedBlock.z) ||
+            // 1, 0, 0
+            (x == highlightedBlock.x + 1 && y == highlightedBlock.y && z == highlightedBlock.z) ||
+            // 1, 1, 0
+            (x == highlightedBlock.x + 1 && y == highlightedBlock.y + 1 && z == highlightedBlock.z) ||
+            // 0, 1, 0
+            (x == highlightedBlock.x && y == highlightedBlock.y + 1 && z == highlightedBlock.z) ||
+            // 0, 0, 1
+            (x == highlightedBlock.x && y == highlightedBlock.y && z == highlightedBlock.z + 1) ||
+            // 1, 0, 1
+            (x == highlightedBlock.x + 1 && y == highlightedBlock.y && z == highlightedBlock.z + 1) ||
+            // 1, 1, 1
+            (x == highlightedBlock.x + 1 && y == highlightedBlock.y + 1 && z == highlightedBlock.z + 1) ||
+            // 0, 1, 1
+            (x == highlightedBlock.x && y == highlightedBlock.y + 1 && z == highlightedBlock.z + 1)
+        )
+    ) {
+        outline = 1f;
+    } else {
+        outline = 0f;
+    }
+
+    gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(out_vertexPos, 1);
 }

@@ -3,11 +3,12 @@ package mpeciakk.render.renderers;
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.TextureAtlas;
-import mpeciakk.helper.Destroyable;
-import mpeciakk.shader.SimpleShader;
+import mpeciakk.util.Destroyable;
+import mpeciakk.shader.ChunkShader;
 import mpeciakk.world.World;
 import mpeciakk.world.chunk.Chunk;
 import mpeciakk.world.chunk.ChunkMeshState;
+import org.joml.Vector3f;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -17,12 +18,11 @@ public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
     private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     public WorldRenderer() {
-        super(new SimpleShader());
+        super(new ChunkShader());
     }
 
     @Override
     public void render(World world) {
-
         for (Chunk chunk : world.getChunks()) {
             if (chunk.getState() == ChunkMeshState.REQUESTED_UPDATE) {
                 chunk.setState(ChunkMeshState.UPDATING);
@@ -37,13 +37,13 @@ public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
 
             shader.start();
             shader.loadTransformationMatrix(chunk.getTransformationMatrix());
+            shader.loadVector("highlightedBlock", chunk.getHighlightedBlock().asVector());
             shader.stop();
 
             if (chunk.getMesh().isFlushed()) {
                 render(chunk.getMesh());
             }
         }
-
     }
 
     @Override

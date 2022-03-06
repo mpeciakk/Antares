@@ -3,6 +3,7 @@ package mpeciakk.shader;
 import mpeciakk.asset.data.ShadersData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -84,6 +85,10 @@ public abstract class Shader {
 
     public void loadVector(String name, Vector3f vector) {
         glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
+    }
+
+    public void loadVector(String name, Vector3i vector) {
+        glUniform3i(getUniformLocation(name), vector.x, vector.y, vector.z);
     }
 
     public void loadBoolean(String name, boolean value) {
