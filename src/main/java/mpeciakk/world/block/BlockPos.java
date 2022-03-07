@@ -10,6 +10,16 @@ public class BlockPos {
         this.pos = new Vector3i(x, y, z);
     }
 
+    public BlockPos() {
+        this(0, 0, 0);
+    }
+
+    public void set(int x, int y, int z) {
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
+    }
+
     public BlockPos offset(Direction direction) {
         pos.add(direction.getOffset());
 

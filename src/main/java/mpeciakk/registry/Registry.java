@@ -8,24 +8,29 @@ import mpeciakk.world.block.BlockModel;
 
 import java.util.*;
 
-public class Registry<T> {
+public abstract class Registry<T> {
     public final static Registry<Block> BLOCK = new BlockRegistry();
 
-    protected final Map<String, T> items = new HashMap<>();
+    private final Map<String, T> idToItem = new HashMap<>();
+    private final Map<Integer, T> rawIdToItem = new HashMap<>();
 
-    public static <V> V register(Registry<V> registry, String id, V object) {
-        registry.register(id, object);
+    private int nextId = 0;
+
+    public abstract void prepare(String id, T object);
+
+    public T register(String id, T object) {
+        prepare(id, object);
+
+        idToItem.put(id, object);
+        rawIdToItem.put(nextId++, object);
 
         return object;
     }
 
-    public void register(String id, T object) {
-    }
-
     private static class BlockRegistry extends Registry<Block> {
         @Override
-        public void register(String id, Block block) {
-            BlockModelData modelData = AssetManager.INSTANCE.get(AssetType.BlockModel, "cobblestone");
+        public void prepare(String id, Block block) {
+            BlockModelData modelData = AssetManager.INSTANCE.get(AssetType.BlockModel, id);
 
             BlockModel model = new BlockModel();
             model.setType(modelData.type());
@@ -35,8 +40,6 @@ public class Registry<T> {
             }
 
             block.setModel(model);
-
-            items.put(id, block);
         }
     }
 }

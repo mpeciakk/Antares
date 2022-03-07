@@ -8,6 +8,7 @@ import mpeciakk.util.Raycaster;
 import mpeciakk.world.World;
 import mpeciakk.world.block.Block;
 import mpeciakk.world.block.BlockPos;
+import mpeciakk.world.block.Blocks;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -61,7 +62,7 @@ public class GameRenderer {
 
         Raycaster.RaycastHit hit = raycaster.ray(world, camera.getPosition(), dir, 640);
 
-        if (hit != null && hit.block().getType() != 0) {
+        if (hit != null && hit.block() != Blocks.AIR) {
             world.getChunk(selectedBlock.getX() >> 4, selectedBlock.getZ() >> 4).setHighlightedBlock(new BlockPos(2137, 2137, 2137));
 
             selectedBlock = new BlockPos(hit.blockPos().getX(), hit.blockPos().getY(), hit.blockPos().getZ());
@@ -72,12 +73,12 @@ public class GameRenderer {
         }
 
         if (client.getInputManager().isButtonPressed(1) && timer == 0) {
-            world.setBlock(selectedBlock.offset(hit.face()).asVector(), new Block(1));
+            world.setBlock(selectedBlock.offset(hit.face()).asVector(), Blocks.COBBLESTONE);
             timer = 50;
         }
 
         if (client.getInputManager().isButtonPressed(0) && timer == 0) {
-            world.setBlock(selectedBlock.asVector(), new Block(0));
+            world.setBlock(selectedBlock.asVector(), Blocks.AIR);
             timer = 50;
         }
 

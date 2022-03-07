@@ -3,9 +3,11 @@ package mpeciakk.world.block;
 import mpeciakk.registry.Registry;
 
 public class Blocks {
+    public static Block AIR;
     public static Block COBBLESTONE;
 
     public static void init() {
-        COBBLESTONE = Registry.register(Registry.BLOCK, "cobblestone", new Block(1));
+        AIR = Registry.BLOCK.register("air", new Block(false));
+        COBBLESTONE = Registry.BLOCK.register("cobblestone", new Block(true));
     }
 }

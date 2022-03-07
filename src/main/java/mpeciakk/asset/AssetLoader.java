@@ -33,6 +33,7 @@ public class AssetLoader {
         loadImage("dirt");
 
         loadBlockModel("cobblestone");
+        loadBlockModel("air");
     }
 
     public void loadShader(String shader) {

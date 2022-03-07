@@ -12,17 +12,13 @@ import mpeciakk.world.block.BlockModel;
 import mpeciakk.world.block.BlockPos;
 import mpeciakk.world.block.Blocks;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Chunk {
 
     public static final int CHUNK_SIZE = 16;
 
-    private final Map<Vector3i, Block> blocks = new HashMap<>();
+    private final Block[][][] blocks = new Block[16][256][16];
 
     private final int x;
     private final int z;
@@ -43,26 +39,49 @@ public class Chunk {
 
     public void generateChunk() {
         for (int x = 0; x < CHUNK_SIZE; x++) {
-            for (int z = 0; z < CHUNK_SIZE; z++) {
-                setBlock(x, (int) world.getNoise().generateHeight(x + this.x * CHUNK_SIZE, z + this.z * CHUNK_SIZE), z, Blocks.COBBLESTONE);
+            for (int y = 0; y < 256; y++) {
+                for (int z = 0; z < CHUNK_SIZE; z++) {
+                    setBlock(x, y, z, Blocks.AIR);
+                }
             }
         }
+
+//        for (int x = 0; x < CHUNK_SIZE; x++) {
+//            for (int z = 0; z < CHUNK_SIZE; z++) {
+//                setBlock(x, (int) world.getNoise().generateHeight(x + this.x * CHUNK_SIZE, z + this.z * CHUNK_SIZE) + 20, z, Blocks.COBBLESTONE);
+//            }
+//        }
+
+        for (int x = 0; x < CHUNK_SIZE; x++) {
+            for (int y = 0; y < 256; y++) {
+                for (int z = 0; z < CHUNK_SIZE; z++) {
+                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.4) {
+                        setBlock(x, y - 18, z, Blocks.COBBLESTONE);
+                    }
+                }
+            }
+        }
+
+//        for (int x = 0; x < CHUNK_SIZE; x++) {
+//            for (int z = 0; z < CHUNK_SIZE; z++) {
+//                setBlock(x, 0, z, Blocks.COBBLESTONE);
+//            }
+//        }
     }
 
     public Block getBlock(Vector3i position) {
-        return blocks.get(position);
+        return getBlock(position.x, position.y, position.z);
     }
 
     public Block getBlock(int x, int y, int z) {
-        return getBlock(new Vector3i(x, y, z));
+        return blocks[x][y][z];
     }
 
     public void setBlock(int x, int y, int z, Block block) {
-        if (blocks.containsKey(new Vector3i(x, y, z))) {
-            blocks.replace(new Vector3i(x, y, z), block);
-        } else {
-            blocks.put(new Vector3i(x, y, z), block);
-        }
+        // TODO: it should never be negative (by now at least)
+        if (y < 0) return;
+
+        blocks[x][y][z] = block;
 
         setState(ChunkMeshState.REQUESTED_UPDATE);
     }
@@ -74,29 +93,34 @@ public class Chunk {
     public void updateMesh() {
         SimpleMeshBuilder meshBuilder = new SimpleMeshBuilder();
 
-        for (Map.Entry<Vector3i, Block> entry : blocks.entrySet()) {
-            Block block = entry.getValue();
-            Vector3i position = entry.getKey();
-            Vector3i worldPosition = new Vector3i(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE).add(position);
+        for (int bx = 0; bx < 16; bx++) {
+            for (int by = 0; by < 256; by++) {
+                for (int bz = 0; bz < 16; bz++) {
+                    Block block = blocks[bx][by][bz];
 
-            if (block.getType() == 1) {
-                Block northBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.NORTH));
-                Block southBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.SOUTH));
-                Block eastBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.EAST));
-                Block westBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.WEST));
-                Block upBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.UP));
-                Block downBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.DOWN));
+                    Vector3i position = new Vector3i(bx, by, bz);
+                    Vector3i worldPosition = new Vector3i(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE).add(position);
 
-                BlockModel model = block.getModel();
+                    if (block != null && block != Blocks.AIR) {
+                        Block northBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.NORTH));
+                        Block southBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.SOUTH));
+                        Block eastBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.EAST));
+                        Block westBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.WEST));
+                        Block upBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.UP));
+                        Block downBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.DOWN));
 
-                Texture front = model.getTextures().get("front");
-                Texture back = model.getTextures().get("back");
-                Texture left = model.getTextures().get("left");
-                Texture right = model.getTextures().get("right");
-                Texture bottom = model.getTextures().get("bottom");
-                Texture top = model.getTextures().get("top");
+                        BlockModel model = block.getModel();
 
-                meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, northBlock == null || northBlock.getType() == 0, southBlock == null || southBlock.getType() == 0, eastBlock == null || eastBlock.getType() == 0, westBlock == null || westBlock.getType() == 0, downBlock == null || downBlock.getType() == 0, upBlock == null || upBlock.getType() == 0);
+                        Texture front = model.getTextures().get("front");
+                        Texture back = model.getTextures().get("back");
+                        Texture left = model.getTextures().get("left");
+                        Texture right = model.getTextures().get("right");
+                        Texture bottom = model.getTextures().get("bottom");
+                        Texture top = model.getTextures().get("top");
+
+                        meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, northBlock == null || !northBlock.isFull(), southBlock == null || !southBlock.isFull(), eastBlock == null || !eastBlock.isFull(), westBlock == null || !westBlock.isFull(), downBlock == null || !downBlock.isFull(), upBlock == null || !upBlock.isFull());
+                    }
+                }
             }
         }
 
@@ -115,10 +139,6 @@ public class Chunk {
 
     public SimpleMesh getMesh() {
         return mesh;
-    }
-
-    public Map<Vector3i, Block> getBlocks() {
-        return blocks;
     }
 
     public int getX() {

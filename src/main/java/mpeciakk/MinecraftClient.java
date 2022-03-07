@@ -39,7 +39,7 @@ public class MinecraftClient {
     public void start() {
         AssetLoader.INSTANCE.load();
 
-        window = new Window(800, 600, "BetterMinecraft");
+        window = new Window(800, 600, "Antares");
         window.create();
 
         AssetManager.INSTANCE.stitchTextures();

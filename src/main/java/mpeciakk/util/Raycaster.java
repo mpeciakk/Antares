@@ -3,10 +3,15 @@ package mpeciakk.util;
 import mpeciakk.world.World;
 import mpeciakk.world.block.Block;
 import mpeciakk.world.block.BlockPos;
+import mpeciakk.world.block.Blocks;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 public class Raycaster {
+
+    private final Vector3f hitPos = new Vector3f();
+    private final Vector3i face = new Vector3i();
+    private final BlockPos blockPos = new BlockPos();
 
     public RaycastHit ray(World world, Vector3f origin, Vector3f direction, float maxDistance) {
         float px = origin.x;
@@ -45,14 +50,19 @@ public class Raycaster {
 
         int steppedIndex = -1;
 
-        Vector3f hitPos = new Vector3f();
-        Vector3i face = new Vector3i();
+        hitPos.x = 0;
+        hitPos.y = 0;
+        hitPos.z = 0;
+
+        face.x = 0;
+        face.y = 0;
+        face.z = 0;
 
         while (t <= maxDistance) {
-            BlockPos blockPos = new BlockPos((int) ix, (int) iy, (int) iz);
+            blockPos.set((int) ix, (int) iy, (int) iz);
             Block block = world.getBlock(blockPos);
 
-            if (block != null && block.getType() != 0) {
+            if (block != null && block != Blocks.AIR) {
                 hitPos.x = px + t * dx;
                 hitPos.y = py + t * dy;
                 hitPos.z = pz + t * dz;

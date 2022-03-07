@@ -2,19 +2,15 @@ package mpeciakk.world.block;
 
 public class Block {
 
-    private int type;
+    private boolean full;
     private BlockModel model;
 
-    public Block(int type) {
-        this.type = type;
+    public Block(boolean full) {
+        this.full = full;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
+    public boolean isFull() {
+        return full;
     }
 
     public BlockModel getModel() {
@@ -28,7 +24,8 @@ public class Block {
     @Override
     public String toString() {
         return "Block{" +
-                "type=" + type +
+                "full=" + full +
+                ", model=" + model +
                 '}';
     }
 }

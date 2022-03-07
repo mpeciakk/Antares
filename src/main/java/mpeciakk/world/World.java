@@ -1,21 +1,22 @@
 package mpeciakk.world;
 
+import de.articdive.jnoise.JNoise;
+import de.articdive.jnoise.fade_functions.FadeFunction;
+import de.articdive.jnoise.interpolation.Interpolation;
 import mpeciakk.world.block.Block;
 import mpeciakk.world.block.BlockPos;
+import mpeciakk.world.block.Blocks;
 import mpeciakk.world.chunk.Chunk;
 import mpeciakk.world.chunk.ChunkMeshState;
 import org.joml.Vector3i;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class World {
 
     private final List<Chunk> chunks = new ArrayList<>();
-    private final PerlinNoiseGenerator noise = new PerlinNoiseGenerator();
+    private final JNoise noise = JNoise.newBuilder().worley().setFrequency(0.1).build();
 
     public World() {
         for (int x = 0; x < 4; x++) {
@@ -45,8 +46,8 @@ public class World {
         int blockY = position.getY();
         int blockZ = position.getZ() - z * Chunk.CHUNK_SIZE;
 
-        if (chunk == null) {
-            return new Block(0);
+        if (chunk == null || blockY < 0) {
+            return Blocks.AIR;
         }
 
         return chunk.getBlock(blockX, blockY, blockZ);
@@ -70,7 +71,11 @@ public class World {
     }
 
     public Chunk getChunk(int x, int z) {
-        for (Chunk chunk : chunks) {
+        int size = chunks.size();
+
+        for (int i = 0; i < size; i++) {
+            Chunk chunk = chunks.get(i);
+
             if (chunk.getX() == x && chunk.getZ() == z) {
                 return chunk;
             }
@@ -83,7 +88,7 @@ public class World {
         return chunks;
     }
 
-    public PerlinNoiseGenerator getNoise() {
+    public JNoise getNoise() {
         return noise;
     }
 }
