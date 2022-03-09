@@ -39,6 +39,8 @@ public abstract class Registry<T> {
                 model.getTextures().put(entry.getKey(), AssetManager.INSTANCE.get(AssetType.Texture, entry.getValue()));
             }
 
+            model.setFull(modelData.full());
+
             block.setModel(model);
         }
     }

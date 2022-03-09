@@ -117,7 +117,7 @@ public class AssetLoader {
                 texturesMap.put(textureKey, textures.get(textureKey).getAsString());
             }
 
-            return new BlockModelData(json.getAsJsonObject().get("type").getAsString(), texturesMap);
+            return new BlockModelData(json.getAsJsonObject().get("type").getAsString(), texturesMap, json.getAsJsonObject().get("full").getAsBoolean());
         }
     }
 }

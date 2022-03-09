@@ -12,15 +12,19 @@ import org.joml.Vector3i;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class World {
 
     private final List<Chunk> chunks = new ArrayList<>();
-    private final JNoise noise = JNoise.newBuilder().worley().setFrequency(0.1).build();
+    private final JNoise noise = JNoise.newBuilder().perlin().setFrequency(0.01).build();
+
+    private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
 
     public World() {
-        for (int x = 0; x < 4; x++) {
-            for (int z = 0; z < 4; z++) {
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
                 chunks.add(new Chunk(x, z, this));
             }
         }
@@ -28,9 +32,11 @@ public class World {
 
     public void generate() {
         for (Chunk chunk : chunks) {
-            chunk.generateChunk();
+            threadPool.submit(chunk::generateChunk);
         }
+    }
 
+    public void regenerateMesh() {
         for (Chunk chunk : chunks) {
             chunk.setState(ChunkMeshState.REQUESTED_UPDATE);
         }

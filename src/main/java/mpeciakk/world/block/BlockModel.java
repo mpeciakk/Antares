@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class BlockModel {
     private String type;
+    private boolean full;
 
     private Map<String, Texture> textures = new HashMap<>();
 
@@ -16,6 +17,14 @@ public class BlockModel {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isFull() {
+        return full;
+    }
+
+    public void setFull(boolean full) {
+        this.full = full;
     }
 
     public Map<String, Texture> getTextures() {

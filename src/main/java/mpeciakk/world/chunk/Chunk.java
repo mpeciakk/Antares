@@ -3,6 +3,7 @@ package mpeciakk.world.chunk;
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.data.Texture;
+import mpeciakk.debug.DebugTools;
 import mpeciakk.render.mesh.SimpleMesh;
 import mpeciakk.render.mesh.builder.SimpleMeshBuilder;
 import mpeciakk.util.Direction;
@@ -55,7 +56,7 @@ public class Chunk {
         for (int x = 0; x < CHUNK_SIZE; x++) {
             for (int y = 0; y < 256; y++) {
                 for (int z = 0; z < CHUNK_SIZE; z++) {
-                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.4) {
+                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.2) {
                         setBlock(x, y - 18, z, Blocks.COBBLESTONE);
                     }
                 }
@@ -67,6 +68,8 @@ public class Chunk {
 //                setBlock(x, 0, z, Blocks.COBBLESTONE);
 //            }
 //        }
+
+        setState(ChunkMeshState.REQUESTED_UPDATE);
     }
 
     public Block getBlock(Vector3i position) {
@@ -74,6 +77,10 @@ public class Chunk {
     }
 
     public Block getBlock(int x, int y, int z) {
+        if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0) {
+            return Blocks.AIR;
+        }
+
         return blocks[x][y][z];
     }
 
@@ -118,7 +125,11 @@ public class Chunk {
                         Texture bottom = model.getTextures().get("bottom");
                         Texture top = model.getTextures().get("top");
 
-                        meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, northBlock == null || !northBlock.isFull(), southBlock == null || !southBlock.isFull(), eastBlock == null || !eastBlock.isFull(), westBlock == null || !westBlock.isFull(), downBlock == null || !downBlock.isFull(), upBlock == null || !upBlock.isFull());
+                        if (DebugTools.naive) {
+                            meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, northBlock == null || !northBlock.getModel().isFull(), southBlock == null || !southBlock.getModel().isFull(), eastBlock == null || !eastBlock.getModel().isFull(), westBlock == null || !westBlock.getModel().isFull(), downBlock == null || !downBlock.getModel().isFull(), upBlock == null || !upBlock.getModel().isFull());
+                        } else {
+                            meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, true, true, true, true, true, true);
+                        }
                     }
                 }
             }

@@ -2,6 +2,7 @@ package mpeciakk;
 
 import mpeciakk.asset.AssetLoader;
 import mpeciakk.asset.AssetManager;
+import mpeciakk.debug.DebugTools;
 import mpeciakk.font.FontManager;
 import mpeciakk.input.InputManager;
 import mpeciakk.registry.Registry;
@@ -17,6 +18,8 @@ import static org.lwjgl.glfw.GLFW.*;
 public class MinecraftClient {
 
     private static MinecraftClient instance;
+
+    private final DebugTools debugTools = new DebugTools(this);
 
     private Window window;
     private InputManager inputManager;
@@ -81,15 +84,9 @@ public class MinecraftClient {
                 window.shouldClose(true);
             }
 
-            if (inputManager.isKeyPressed(GLFW_KEY_Q)) {
-                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            }
-
-            if (inputManager.isKeyPressed(GLFW_KEY_E)) {
-                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            }
-
             gameRenderer.render();
+
+            debugTools.update();
         }
     }
 
@@ -112,6 +109,10 @@ public class MinecraftClient {
 
     public Window getWindow() {
         return window;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     public GameRenderer getGameRenderer() {

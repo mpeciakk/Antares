@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
 
-    private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+    private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
 
     public WorldRenderer() {
         super(new ChunkShader());
