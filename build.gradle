@@ -39,3 +39,16 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.9'
 }
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes(
+                'Main-Class': 'mpeciakk.MinecraftClient'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

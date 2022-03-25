@@ -1,11 +1,9 @@
 package mpeciakk.world;
 
 import de.articdive.jnoise.JNoise;
-import de.articdive.jnoise.fade_functions.FadeFunction;
-import de.articdive.jnoise.interpolation.Interpolation;
-import mpeciakk.world.block.Block;
-import mpeciakk.world.block.BlockPos;
-import mpeciakk.world.block.Blocks;
+import mpeciakk.block.Block;
+import mpeciakk.block.BlockPos;
+import mpeciakk.block.Blocks;
 import mpeciakk.world.chunk.Chunk;
 import mpeciakk.world.chunk.ChunkMeshState;
 import org.joml.Vector3i;

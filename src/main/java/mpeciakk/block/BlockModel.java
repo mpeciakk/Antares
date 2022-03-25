@@ -1,4 +1,4 @@
-package mpeciakk.world.block;
+package mpeciakk.block;
 
 import mpeciakk.asset.data.Texture;
 

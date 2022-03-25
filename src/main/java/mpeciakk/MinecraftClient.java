@@ -5,13 +5,10 @@ import mpeciakk.asset.AssetManager;
 import mpeciakk.debug.DebugTools;
 import mpeciakk.font.FontManager;
 import mpeciakk.input.InputManager;
-import mpeciakk.registry.Registry;
 import mpeciakk.render.GameRenderer;
 import mpeciakk.window.Window;
 import mpeciakk.world.World;
-import mpeciakk.world.block.Block;
-import mpeciakk.world.block.Blocks;
-import org.lwjgl.opengl.GL11;
+import mpeciakk.block.Blocks;
 
 import static org.lwjgl.glfw.GLFW.*;
 

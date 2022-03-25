@@ -1,9 +1,9 @@
 package mpeciakk.util;
 
 import mpeciakk.world.World;
-import mpeciakk.world.block.Block;
-import mpeciakk.world.block.BlockPos;
-import mpeciakk.world.block.Blocks;
+import mpeciakk.block.Block;
+import mpeciakk.block.BlockPos;
+import mpeciakk.block.Blocks;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 

@@ -1,17 +1,15 @@
 package mpeciakk.world.chunk;
 
-import mpeciakk.asset.AssetManager;
-import mpeciakk.asset.AssetType;
 import mpeciakk.asset.data.Texture;
 import mpeciakk.debug.DebugTools;
 import mpeciakk.render.mesh.SimpleMesh;
 import mpeciakk.render.mesh.builder.SimpleMeshBuilder;
 import mpeciakk.util.Direction;
 import mpeciakk.world.World;
-import mpeciakk.world.block.Block;
-import mpeciakk.world.block.BlockModel;
-import mpeciakk.world.block.BlockPos;
-import mpeciakk.world.block.Blocks;
+import mpeciakk.block.Block;
+import mpeciakk.block.BlockModel;
+import mpeciakk.block.BlockPos;
+import mpeciakk.block.Blocks;
 import org.joml.Matrix4f;
 import org.joml.Vector3i;
 
@@ -66,6 +64,16 @@ public class Chunk {
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int z = 0; z < CHUNK_SIZE; z++) {
 //                setBlock(x, 0, z, Blocks.COBBLESTONE);
+//            }
+//        }
+
+//        for (int x = 0; x < CHUNK_SIZE; x++) {
+//            for (int y = 0; y < 255; y++) {
+//                for (int z = 0; z < CHUNK_SIZE; z++) {
+//                    if ((x + y + z) % 2 == 0) {
+//                        setBlock(x, y, z, Blocks.COBBLESTONE);
+//                    }
+//                }
 //            }
 //        }
 

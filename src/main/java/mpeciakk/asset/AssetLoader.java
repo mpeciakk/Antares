@@ -3,7 +3,6 @@ package mpeciakk.asset;
 import com.google.gson.*;
 import mpeciakk.asset.data.BlockModelData;
 import mpeciakk.asset.data.ShadersData;
-import mpeciakk.world.block.BlockModel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

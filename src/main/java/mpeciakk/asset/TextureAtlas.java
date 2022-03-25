@@ -65,6 +65,7 @@ public class TextureAtlas {
 
         pixels.flip();
 
+        // TODO: add this as a debug option
         try {
             ImageIO.write(getImage(), "png", new File("blocks.png"));
         } catch (IOException e) {

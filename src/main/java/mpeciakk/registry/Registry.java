@@ -3,8 +3,8 @@ package mpeciakk.registry;
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.data.BlockModelData;
-import mpeciakk.world.block.Block;
-import mpeciakk.world.block.BlockModel;
+import mpeciakk.block.Block;
+import mpeciakk.block.BlockModel;
 
 import java.util.*;
 
@@ -31,6 +31,11 @@ public abstract class Registry<T> {
         @Override
         public void prepare(String id, Block block) {
             BlockModelData modelData = AssetManager.INSTANCE.get(AssetType.BlockModel, id);
+
+            if (modelData == null) {
+                System.err.println("Can't find model data for block " + id);
+                return;
+            }
 
             BlockModel model = new BlockModel();
             model.setType(modelData.type());

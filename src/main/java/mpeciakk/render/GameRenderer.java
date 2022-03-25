@@ -6,9 +6,8 @@ import mpeciakk.render.renderers.ModelRenderer;
 import mpeciakk.render.renderers.TextRenderer;
 import mpeciakk.util.Raycaster;
 import mpeciakk.world.World;
-import mpeciakk.world.block.Block;
-import mpeciakk.world.block.BlockPos;
-import mpeciakk.world.block.Blocks;
+import mpeciakk.block.BlockPos;
+import mpeciakk.block.Blocks;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
