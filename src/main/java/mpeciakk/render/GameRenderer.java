@@ -1,13 +1,13 @@
 package mpeciakk.render;
 
 import mpeciakk.MinecraftClient;
-import mpeciakk.render.renderers.WorldRenderer;
-import mpeciakk.render.renderers.ModelRenderer;
-import mpeciakk.render.renderers.TextRenderer;
-import mpeciakk.util.Raycaster;
-import mpeciakk.world.World;
 import mpeciakk.block.BlockPos;
 import mpeciakk.block.Blocks;
+import mpeciakk.render.renderers.ModelRenderer;
+import mpeciakk.render.renderers.TextRenderer;
+import mpeciakk.render.renderers.WorldRenderer;
+import mpeciakk.util.Raycaster;
+import mpeciakk.world.World;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -33,13 +33,13 @@ public class GameRenderer {
         this.client = client;
         this.world = world;
 
-        camera = new Camera(client.getWindow().getWidth(), client.getWindow().getHeight());
+        this.camera = new Camera(client.getWindow().getWidth(), client.getWindow().getHeight());
 
-        modelRenderer = new ModelRenderer();
-        textRenderer = new TextRenderer(client.getFontManager());
-        worldRenderer = new WorldRenderer();
+        this.modelRenderer = new ModelRenderer();
+        this.textRenderer = new TextRenderer(client.getFontManager());
+        this.worldRenderer = new WorldRenderer();
 
-        raycaster = new Raycaster();
+        this.raycaster = new Raycaster();
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);

@@ -7,7 +7,7 @@ import java.util.Map;
 public class AssetManager {
 
     public final static AssetManager INSTANCE = new AssetManager();
-    private Map<AssetType, Map<String, Object>> assets = new HashMap<>();
+    private final Map<AssetType, Map<String, Object>> assets = new HashMap<>();
 
     public <T> void register(AssetType type, String name, T asset) {
         if (!assets.containsKey(type)) {

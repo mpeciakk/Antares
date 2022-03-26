@@ -1,7 +1,6 @@
 package mpeciakk.render;
 
 import mpeciakk.MinecraftClient;
-import mpeciakk.window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -13,16 +12,13 @@ public class Camera {
     public static final float FAR_PLANE = 1000f;
 
     private final Matrix4f projectionMatrix;
-    private Matrix4f viewMatrix = new Matrix4f();
-
     private final Vector3f position = new Vector3f(0, 0, 0);
+    private final float speed = 5f / 32f;
+    private final float sensitivity = 0.05f;
+    private final Matrix4f viewMatrix = new Matrix4f();
     private float pitch = 0;
     private float yaw = 0;
     private float roll;
-
-    private final float speed = 5f / 32f;
-    private final float sensitivity = 0.05f;
-
     private float currentSpeed = 0;
 
     public Camera(int width, int height) {

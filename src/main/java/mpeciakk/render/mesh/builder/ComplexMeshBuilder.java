@@ -2,13 +2,12 @@ package mpeciakk.render.mesh.builder;
 
 import mpeciakk.render.mesh.ComplexMesh;
 import mpeciakk.render.mesh.Vertex;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ComplexMeshBuilder {
-    private List<Vertex> vertices = new ArrayList<>();
+    private final List<Vertex> vertices = new ArrayList<>();
 
     public void drawCuboid(Vertex a, Vertex b) {
         // Front

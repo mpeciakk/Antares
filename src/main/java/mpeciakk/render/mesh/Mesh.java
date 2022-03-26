@@ -19,7 +19,7 @@ public abstract class Mesh<T> {
     protected boolean flushed;
 
     public Mesh() {
-        vao = glGenVertexArrays();
+        this.vao = glGenVertexArrays();
 
         initBuffers();
     }

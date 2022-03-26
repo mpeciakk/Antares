@@ -1,9 +1,9 @@
 package mpeciakk.model;
 
-import mpeciakk.render.mesh.ComplexMesh;
-import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
-import mpeciakk.render.mesh.Vertex;
 import mpeciakk.asset.data.Texture;
+import mpeciakk.render.mesh.ComplexMesh;
+import mpeciakk.render.mesh.Vertex;
+import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
 import org.joml.Matrix4f;
 
 import java.util.Map;
@@ -15,16 +15,15 @@ public class ModelPart {
     private final String name;
 
 //    private final float[] textureCoords;
-
+    private final ComplexMesh mesh;
     private Texture texture;
-    private ComplexMesh mesh;
 
     public ModelPart(float[] from, float[] to, String name, Map<String, JsonModel.Element.Face> faces, Texture texture) {
+        this.name = name;
+
         ComplexMeshBuilder meshBuilder = new ComplexMeshBuilder();
         meshBuilder.drawCuboid(new Vertex(from[0], from[1], from[2], 0, 0, 0, 0, 0), new Vertex(to[0], to[1], to[2], 0, 0, 0, 0, 0));
-        mesh = meshBuilder.getMesh().flush();
-
-        this.name = name;
+        this.mesh = meshBuilder.getMesh().flush();
 
         float[] north = faces.get("north").getUv();
         float[] east = faces.get("east").getUv();

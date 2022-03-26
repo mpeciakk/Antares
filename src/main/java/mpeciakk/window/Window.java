@@ -12,11 +12,10 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class Window {
 
-    private long id;
-
     private final int width;
     private final int height;
     private final String title;
+    private long id;
 
     public Window(int width, int height, String title) {
         this.width = width;

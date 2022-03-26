@@ -4,9 +4,9 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Vertex {
-    private Vector3f position;
-    private Vector2f textureCoordinate;
-    private Vector3f normal;
+    private final Vector3f position;
+    private final Vector2f textureCoordinate;
+    private final Vector3f normal;
 
     public Vertex(Vector3f position, Vector2f textureCoordinate, Vector3f normal) {
         this.position = position;

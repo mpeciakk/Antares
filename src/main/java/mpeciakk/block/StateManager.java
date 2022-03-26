@@ -1,14 +1,15 @@
 package mpeciakk.block;
 
 import mpeciakk.block.property.Property;
-import mpeciakk.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StateManager {
     private final List<Property<?>> propertiesOrder = new ArrayList<>();
     private final List<BlockState> states = new ArrayList<>();
-
     private final Block block;
 
     public StateManager(Block block) {
@@ -17,21 +18,26 @@ public class StateManager {
 
     private List<List<Object>> cartesianProduct(List<List<?>> lists) {
         List<List<Object>> resultLists = new ArrayList<>();
+
         if (lists.size() == 0) {
             resultLists.add(new ArrayList<>());
+
             return resultLists;
         } else {
             List<?> firstList = lists.get(0);
             List<List<Object>> remainingLists = cartesianProduct(lists.subList(1, lists.size()));
+
             for (Object condition : firstList) {
                 for (List<Object> remainingList : remainingLists) {
                     ArrayList<Object> resultList = new ArrayList<>();
+
                     resultList.add(condition);
                     resultList.addAll(remainingList);
                     resultLists.add(resultList);
                 }
             }
         }
+
         return resultLists;
     }
 
@@ -54,12 +60,11 @@ public class StateManager {
             }
 
             states.add(new BlockState(properties, propertiesOrder, block));
-            System.out.println(properties);
         }
     }
 
     public StateManager addProperty(Property<?> property) {
-        this.propertiesOrder.add(property);
+        propertiesOrder.add(property);
 
         return this;
     }

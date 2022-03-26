@@ -1,6 +1,7 @@
 package mpeciakk.asset;
 
 import mpeciakk.asset.data.Texture;
+import mpeciakk.debug.DebugTools;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 
@@ -12,25 +13,45 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL12C.GL_BGRA;
 import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 import static org.lwjgl.opengl.GL42.glTexStorage2D;
 
 public class TextureAtlas {
-    private final int texture = glGenTextures();
     private final int tileSize;
-    private int index = 0;
-    private int rows;
-    private int cols;
+    private final int texture;
+    private final int rows;
+    private final int cols;
     private BufferedImage image;
+    private int index = 0;
 
     public TextureAtlas(int size, int tileSize) {
         this.tileSize = tileSize;
+        this.texture = glGenTextures();
         this.image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
         this.rows = image.getHeight() / tileSize;
         this.cols = image.getWidth() / tileSize;
+    }
+
+    private static BufferedImage appendImage(BufferedImage source, BufferedImage image, int x, int y) {
+        if (y > source.getHeight() || x > source.getWidth()) {
+            System.err.println("Texture coordinates extends atlas size");
+
+            return null;
+        }
+
+        int height = source.getHeight();
+        int width = source.getWidth();
+
+        BufferedImage concatImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D ctx = concatImage.createGraphics();
+
+        ctx.drawImage(source, 0, 0, null);
+        ctx.drawImage(image, x, y, null);
+
+        ctx.dispose();
+
+        return concatImage;
     }
 
     public Texture addTexture(BufferedImage newImage) {
@@ -65,11 +86,12 @@ public class TextureAtlas {
 
         pixels.flip();
 
-        // TODO: add this as a debug option
-        try {
-            ImageIO.write(getImage(), "png", new File("blocks.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (DebugTools.generateAtlasImages) {
+            try {
+                ImageIO.write(getImage(), "png", new File("blocks.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         glBindTexture(GL_TEXTURE_2D, getTexture());
@@ -102,27 +124,6 @@ public class TextureAtlas {
 
     public BufferedImage getImage() {
         return image;
-    }
-
-    private static BufferedImage appendImage(BufferedImage source, BufferedImage image, int x, int y) {
-        if (y > source.getHeight() || x > source.getWidth()) {
-            System.err.println("Texture coordinates extends atlas size");
-
-            return null;
-        }
-
-        int height = source.getHeight();
-        int width = source.getWidth();
-
-        BufferedImage concatImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D ctx = concatImage.createGraphics();
-
-        ctx.drawImage(source, 0, 0, null);
-        ctx.drawImage(image, x, y, null);
-
-        ctx.dispose();
-
-        return concatImage;
     }
 
     @Override

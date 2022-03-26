@@ -18,20 +18,34 @@ public abstract class Shader {
     private final int programId;
     private final int vertexId;
     private final int fragmentId;
-
-    private FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
     private final Map<String, Integer> locationCache = new HashMap<>();
+    private FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public Shader(ShadersData shadersData) {
-        vertexId = loadShader(shadersData.vs(), GL_VERTEX_SHADER);
-        fragmentId = loadShader(shadersData.fs(), GL_FRAGMENT_SHADER);
+        this.vertexId = loadShader(shadersData.vs(), GL_VERTEX_SHADER);
+        this.fragmentId = loadShader(shadersData.fs(), GL_FRAGMENT_SHADER);
 
-        programId = glCreateProgram();
+        this.programId = glCreateProgram();
+
         glAttachShader(programId, vertexId);
         glAttachShader(programId, fragmentId);
         bindAttributes();
         glLinkProgram(programId);
         glValidateProgram(programId);
+    }
+
+    private static int loadShader(String source, int type) {
+        int id = glCreateShader(type);
+        glShaderSource(id, source);
+        glCompileShader(id);
+
+        if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE) {
+            System.out.println(glGetShaderInfoLog(id, 500));
+            System.err.println("Could not compile shader!");
+            System.exit(-1);
+        }
+
+        return id;
     }
 
     public void start() {
@@ -107,19 +121,5 @@ public abstract class Shader {
 
     protected void bindAttribute(int attribute, String name) {
         glBindAttribLocation(programId, attribute, name);
-    }
-
-    private static int loadShader(String source, int type) {
-        int id = glCreateShader(type);
-        glShaderSource(id, source);
-        glCompileShader(id);
-
-        if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE) {
-            System.out.println(glGetShaderInfoLog(id, 500));
-            System.err.println("Could not compile shader!");
-            System.exit(-1);
-        }
-
-        return id;
     }
 }

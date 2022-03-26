@@ -8,12 +8,12 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class Block {
-    private BlockModel model;
-
     protected final StateManager stateManager;
 
+    private BlockModel model;
+
     public Block() {
-        stateManager = new StateManager(this);
+        this.stateManager = new StateManager(this);
         appendProperties();
         stateManager.updateStates();
     }
