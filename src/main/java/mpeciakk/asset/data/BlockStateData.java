@@ -1,5 +1,6 @@
 package mpeciakk.asset.data;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class BlockStateData {
@@ -7,6 +8,13 @@ public class BlockStateData {
 
     public SingleStateData[] getStates() {
         return states;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockStateData{" +
+                "states=" + Arrays.toString(states) +
+                '}';
     }
 
     public static class SingleStateData {
@@ -19,6 +27,14 @@ public class BlockStateData {
 
         public String getModel() {
             return model;
+        }
+
+        @Override
+        public String toString() {
+            return "SingleStateData{" +
+                    "properties=" + properties +
+                    ", model='" + model + '\'' +
+                    '}';
         }
     }
 }

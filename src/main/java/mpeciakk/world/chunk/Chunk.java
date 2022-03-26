@@ -42,8 +42,8 @@ public class Chunk {
             }
         }
 
-        setBlock(0, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, false).with(TestBlock.property2, false).with(TestBlock.property3, false).get());
-        setBlock(1, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, true).with(TestBlock.property2, true).with(TestBlock.property3, true).get());
+        setBlock(0, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, false).with(TestBlock.property2, 0).with(TestBlock.property3, false).get());
+        setBlock(1, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, true).with(TestBlock.property2, 3).with(TestBlock.property3, true).get());
 
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int z = 0; z < CHUNK_SIZE; z++) {

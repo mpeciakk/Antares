@@ -34,4 +34,13 @@ public class BlockModel {
     public void setTextures(Map<String, Texture> textures) {
         this.textures = textures;
     }
+
+    @Override
+    public String toString() {
+        return "BlockModel{" +
+                "type='" + type + '\'' +
+                ", full=" + full +
+                ", textures=" + textures +
+                '}';
+    }
 }

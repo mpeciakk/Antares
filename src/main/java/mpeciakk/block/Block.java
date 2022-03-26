@@ -64,8 +64,6 @@ public class Block {
             int currentBase = 1;
             int relativeId = 0;
 
-            System.out.println(propertiesOrder);
-
             for (Property<?> property : propertiesOrder) {
                 int value = 0;
                 Comparable<?> valueObject = properties.get(property);
@@ -88,6 +86,16 @@ public class Block {
             }
 
             return relativeId;
+        }
+
+        @Override
+        public String toString() {
+            return "BlockStateBuilder{" +
+                    "properties=" + properties +
+                    ", propertiesOrder=" + propertiesOrder +
+                    ", nameToProperty=" + nameToProperty +
+                    ", block=" + block +
+                    '}';
         }
     }
 }

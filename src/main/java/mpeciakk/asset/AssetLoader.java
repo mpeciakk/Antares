@@ -1,6 +1,7 @@
 package mpeciakk.asset;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import mpeciakk.asset.data.BlockModelData;
 import mpeciakk.asset.data.BlockStateData;
 import mpeciakk.asset.data.ShadersData;
@@ -16,10 +17,23 @@ import java.util.*;
 
 public class AssetLoader {
 
+    public enum ToNumberPolicy implements ToNumberStrategy {
+        INTEGER {
+            @Override public Integer readNumber(JsonReader in) throws IOException {
+                String value = in.nextString();
+                try {
+                    return Integer.valueOf(value);
+                } catch (NumberFormatException e) {
+                    throw new JsonParseException("Cannot parse " + value + "; at path " + in.getPath(), e);
+                }
+            }
+        }
+    }
+
     public final static AssetLoader INSTANCE = new AssetLoader();
 
     private final Gson blockModelGson = new GsonBuilder().registerTypeAdapter(BlockModelData.class, new BlockModelDeserializer()).create();
-    private final Gson blockStateGson = new GsonBuilder().create();
+    private final Gson blockStateGson = new GsonBuilder().setObjectToNumberStrategy(ToNumberPolicy.INTEGER).create();
 
     public void load() {
         loadShader("simple");
