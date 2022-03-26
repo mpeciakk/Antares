@@ -11,6 +11,8 @@ public class BlockState {
 
     private final Block block;
 
+    private BlockModel model;
+
     public BlockState(Map<Property<?>, Comparable<?>> properties, List<Property<?>> propertiesOrder, Block block) {
         this.properties = properties;
         this.propertiesOrder = propertiesOrder;
@@ -23,6 +25,14 @@ public class BlockState {
 
     public List<Property<?>> getPropertiesOrder() {
         return propertiesOrder;
+    }
+
+    public BlockModel getModel() {
+        return model;
+    }
+
+    public void setModel(BlockModel model) {
+        this.model = model;
     }
 
     @Override

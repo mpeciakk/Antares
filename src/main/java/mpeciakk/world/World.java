@@ -1,8 +1,8 @@
 package mpeciakk.world;
 
 import de.articdive.jnoise.JNoise;
-import mpeciakk.block.Block;
 import mpeciakk.block.BlockPos;
+import mpeciakk.block.BlockState;
 import mpeciakk.block.Blocks;
 import mpeciakk.world.chunk.Chunk;
 import mpeciakk.world.chunk.ChunkMeshState;
@@ -18,11 +18,11 @@ public class World {
     private final List<Chunk> chunks = new ArrayList<>();
     private final JNoise noise = JNoise.newBuilder().perlin().setFrequency(0.01).build();
 
-    private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+    private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
 
     public World() {
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
+        for (int x = 0; x < 1; x++) {
+            for (int z = 0; z < 1; z++) {
                 chunks.add(new Chunk(x, z, this));
             }
         }
@@ -40,7 +40,7 @@ public class World {
         }
     }
 
-    public Block getBlock(BlockPos position) {
+    public BlockState getBlock(BlockPos position) {
         int x = position.getX() >> 4;
         int z = position.getZ() >> 4;
 
@@ -51,13 +51,13 @@ public class World {
         int blockZ = position.getZ() - z * Chunk.CHUNK_SIZE;
 
         if (chunk == null || blockY < 0) {
-            return Blocks.AIR;
+            return Blocks.AIR.getDefaultState();
         }
 
         return chunk.getBlock(blockX, blockY, blockZ);
     }
 
-    public void setBlock(Vector3i position, Block block) {
+    public void setBlock(Vector3i position, BlockState block) {
         int x = position.x >> 4;
         int z = position.z >> 4;
 

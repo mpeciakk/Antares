@@ -1,0 +1,20 @@
+{
+  "states": [
+    {
+      "properties": {
+        "property1": false,
+        "property2": false,
+        "property3": false
+      },
+      "model": "test_block"
+    },
+    {
+      "properties": {
+        "property1": true,
+        "property2": true,
+        "property3": true
+      },
+      "model": "test_block2"
+    }
+  ]
+}

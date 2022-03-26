@@ -61,7 +61,7 @@ public class GameRenderer {
 
         Raycaster.RaycastHit hit = raycaster.ray(world, camera.getPosition(), dir, 640);
 
-        if (hit != null && hit.block() != Blocks.AIR) {
+        if (hit != null && hit.block() != Blocks.AIR.getDefaultState()) {
             world.getChunk(selectedBlock.getX() >> 4, selectedBlock.getZ() >> 4).setHighlightedBlock(new BlockPos(2137, 2137, 2137));
 
             selectedBlock = new BlockPos(hit.blockPos().getX(), hit.blockPos().getY(), hit.blockPos().getZ());
@@ -72,12 +72,12 @@ public class GameRenderer {
         }
 
         if (client.getInputManager().isButtonPressed(1) && timer == 0) {
-            world.setBlock(selectedBlock.offset(hit.face()).asVector(), Blocks.COBBLESTONE);
+            world.setBlock(selectedBlock.offset(hit.face()).asVector(), Blocks.COBBLESTONE.getDefaultState());
             timer = 50;
         }
 
         if (client.getInputManager().isButtonPressed(0) && timer == 0) {
-            world.setBlock(selectedBlock.asVector(), Blocks.AIR);
+            world.setBlock(selectedBlock.asVector(), Blocks.AIR.getDefaultState());
             timer = 50;
         }
 

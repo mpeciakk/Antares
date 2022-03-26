@@ -1,9 +1,9 @@
 package mpeciakk.util;
 
-import mpeciakk.world.World;
-import mpeciakk.block.Block;
 import mpeciakk.block.BlockPos;
+import mpeciakk.block.BlockState;
 import mpeciakk.block.Blocks;
+import mpeciakk.world.World;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
@@ -60,9 +60,9 @@ public class Raycaster {
 
         while (t <= maxDistance) {
             blockPos.set((int) ix, (int) iy, (int) iz);
-            Block block = world.getBlock(blockPos);
+            BlockState block = world.getBlock(blockPos);
 
-            if (block != null && block != Blocks.AIR) {
+            if (block != null && block != Blocks.AIR.getDefaultState()) {
                 hitPos.x = px + t * dx;
                 hitPos.y = py + t * dy;
                 hitPos.z = pz + t * dz;
@@ -108,6 +108,6 @@ public class Raycaster {
         return null;
     }
 
-    public record RaycastHit(Block block, Vector3f pos, BlockPos blockPos, Direction face) {
+    public record RaycastHit(BlockState block, Vector3f pos, BlockPos blockPos, Direction face) {
     }
 }

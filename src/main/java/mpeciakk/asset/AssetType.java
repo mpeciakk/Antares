@@ -5,5 +5,6 @@ public enum AssetType {
     Image,
     Texture,
     TextureAtlas,
-    BlockModel
+    BlockModel,
+    BlockState,
 }

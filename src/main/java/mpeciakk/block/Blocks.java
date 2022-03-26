@@ -10,8 +10,6 @@ public class Blocks {
     public static void init() {
         AIR = Registry.BLOCK.register("air", new Block());
         COBBLESTONE = Registry.BLOCK.register("cobblestone", new Block());
-        TEST_BLOCK = Registry.BLOCK.register("test", new TestBlock());
-
-        System.out.println(TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, false).with(TestBlock.property2, true).with(TestBlock.property3, false).get());
+        TEST_BLOCK = Registry.BLOCK.register("test_block", new TestBlock());
     }
 }

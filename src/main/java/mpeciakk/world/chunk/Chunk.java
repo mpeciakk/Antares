@@ -1,15 +1,12 @@
 package mpeciakk.world.chunk;
 
 import mpeciakk.asset.data.Texture;
+import mpeciakk.block.*;
 import mpeciakk.debug.DebugTools;
 import mpeciakk.render.mesh.SimpleMesh;
 import mpeciakk.render.mesh.builder.SimpleMeshBuilder;
 import mpeciakk.util.Direction;
 import mpeciakk.world.World;
-import mpeciakk.block.Block;
-import mpeciakk.block.BlockModel;
-import mpeciakk.block.BlockPos;
-import mpeciakk.block.Blocks;
 import org.joml.Matrix4f;
 import org.joml.Vector3i;
 
@@ -17,7 +14,7 @@ public class Chunk {
 
     public static final int CHUNK_SIZE = 16;
 
-    private final Block[][][] blocks = new Block[16][256][16];
+    private final BlockState[][][] blocks = new BlockState[16][256][16];
 
     private final int x;
     private final int z;
@@ -40,10 +37,13 @@ public class Chunk {
         for (int x = 0; x < CHUNK_SIZE; x++) {
             for (int y = 0; y < 256; y++) {
                 for (int z = 0; z < CHUNK_SIZE; z++) {
-                    setBlock(x, y, z, Blocks.AIR);
+                    setBlock(x, y, z, Blocks.AIR.getDefaultState());
                 }
             }
         }
+
+        setBlock(0, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, false).with(TestBlock.property2, false).with(TestBlock.property3, false).get());
+        setBlock(1, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, true).with(TestBlock.property2, true).with(TestBlock.property3, true).get());
 
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -51,15 +51,15 @@ public class Chunk {
 //            }
 //        }
 
-        for (int x = 0; x < CHUNK_SIZE; x++) {
-            for (int y = 0; y < 256; y++) {
-                for (int z = 0; z < CHUNK_SIZE; z++) {
-                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.2) {
-                        setBlock(x, y - 18, z, Blocks.COBBLESTONE);
-                    }
-                }
-            }
-        }
+//        for (int x = 0; x < CHUNK_SIZE; x++) {
+//            for (int y = 0; y < 256; y++) {
+//                for (int z = 0; z < CHUNK_SIZE; z++) {
+//                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.2) {
+//                        setBlock(x, y - 18, z, Blocks.COBBLESTONE.getDefaultState());
+//                    }
+//                }
+//            }
+//        }
 
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -80,19 +80,19 @@ public class Chunk {
         setState(ChunkMeshState.REQUESTED_UPDATE);
     }
 
-    public Block getBlock(Vector3i position) {
+    public BlockState getBlock(Vector3i position) {
         return getBlock(position.x, position.y, position.z);
     }
 
-    public Block getBlock(int x, int y, int z) {
+    public BlockState getBlock(int x, int y, int z) {
         if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0) {
-            return Blocks.AIR;
+            return Blocks.AIR.getDefaultState();
         }
 
         return blocks[x][y][z];
     }
 
-    public void setBlock(int x, int y, int z, Block block) {
+    public void setBlock(int x, int y, int z, BlockState block) {
         // TODO: it should never be negative (by now at least)
         if (y < 0) return;
 
@@ -101,7 +101,7 @@ public class Chunk {
         setState(ChunkMeshState.REQUESTED_UPDATE);
     }
 
-    public void setBlock(BlockPos pos, Block block) {
+    public void setBlock(BlockPos pos, BlockState block) {
         setBlock(pos.getX(), pos.getY(), pos.getZ(), block);
     }
 
@@ -111,18 +111,18 @@ public class Chunk {
         for (int bx = 0; bx < 16; bx++) {
             for (int by = 0; by < 256; by++) {
                 for (int bz = 0; bz < 16; bz++) {
-                    Block block = blocks[bx][by][bz];
+                    BlockState block = blocks[bx][by][bz];
 
                     Vector3i position = new Vector3i(bx, by, bz);
                     Vector3i worldPosition = new Vector3i(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE).add(position);
 
-                    if (block != null && block != Blocks.AIR) {
-                        Block northBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.NORTH));
-                        Block southBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.SOUTH));
-                        Block eastBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.EAST));
-                        Block westBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.WEST));
-                        Block upBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.UP));
-                        Block downBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.DOWN));
+                    if (block != null && block != Blocks.AIR.getDefaultState()) {
+                        BlockState northBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.NORTH));
+                        BlockState southBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.SOUTH));
+                        BlockState eastBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.EAST));
+                        BlockState westBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.WEST));
+                        BlockState upBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.UP));
+                        BlockState downBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.DOWN));
 
                         BlockModel model = block.getModel();
 

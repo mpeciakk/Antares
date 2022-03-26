@@ -6,14 +6,15 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Block {
     protected final StateManager stateManager;
 
-    private BlockModel model;
-
     public Block() {
         this.stateManager = new StateManager(this);
+
         appendProperties();
         stateManager.updateStates();
     }
@@ -29,34 +30,28 @@ public class Block {
         return stateManager.getStates().get(0);
     }
 
-    public BlockModel getModel() {
-        return model;
-    }
-
-    public void setModel(BlockModel model) {
-        this.model = model;
-    }
-
-    @Override
-    public String toString() {
-        return "Block{" +
-                ", model=" + model +
-                '}';
-    }
-
     public static class BlockStateBuilder {
         private final Map<Property<?>, Comparable<?>> properties;
         private final Deque<Property<?>> propertiesOrder;
+        private final Map<String, Property<?>> nameToProperty;
         private final Block block;
 
         public BlockStateBuilder(Block block) {
             this.properties = new HashMap<>(block.getDefaultState().getProperties());
             this.propertiesOrder = new LinkedList<>(block.getDefaultState().getPropertiesOrder());
+            this.nameToProperty = block.getDefaultState().getPropertiesOrder().stream().collect(Collectors.toMap(Property::getName, Function.identity()));
+
             this.block = block;
         }
 
         public BlockStateBuilder with(Property<?> property, Comparable<?> value) {
             properties.put(property, value);
+
+            return this;
+        }
+
+        public BlockStateBuilder with(String property, Comparable<?> value) {
+            properties.put(nameToProperty.get(property), value);
 
             return this;
         }

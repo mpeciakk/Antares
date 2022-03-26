@@ -3,19 +3,18 @@ package mpeciakk.render.renderers;
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.TextureAtlas;
-import mpeciakk.util.Destroyable;
 import mpeciakk.shader.ChunkShader;
+import mpeciakk.util.Destroyable;
 import mpeciakk.world.World;
 import mpeciakk.world.chunk.Chunk;
 import mpeciakk.world.chunk.ChunkMeshState;
-import org.joml.Vector3f;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
 
-    private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+    private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
 
     public WorldRenderer() {
         super(new ChunkShader());

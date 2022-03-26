@@ -3,10 +3,12 @@ package mpeciakk.registry;
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.data.BlockModelData;
+import mpeciakk.asset.data.BlockStateData;
 import mpeciakk.block.Block;
 import mpeciakk.block.BlockModel;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Registry<T> {
     public final static Registry<Block> BLOCK = new BlockRegistry();
@@ -30,23 +32,38 @@ public abstract class Registry<T> {
     private static class BlockRegistry extends Registry<Block> {
         @Override
         public void prepare(String id, Block block) {
-            BlockModelData modelData = AssetManager.INSTANCE.get(AssetType.BlockModel, id);
+            BlockStateData stateData = AssetManager.INSTANCE.get(AssetType.BlockState, id);
 
-            if (modelData == null) {
-                System.err.println("Can't find model data for block " + id);
+            if (stateData == null) {
+                System.err.println("Can't find state for block " + id);
                 return;
             }
 
-            BlockModel model = new BlockModel();
-            model.setType(modelData.type());
+           for (BlockStateData.SingleStateData state : stateData.getStates()) {
+               BlockModelData modelData = AssetManager.INSTANCE.get(AssetType.BlockModel, state.getModel());
 
-            for (Map.Entry<String, String> entry : modelData.textures().entrySet()) {
-                model.getTextures().put(entry.getKey(), AssetManager.INSTANCE.get(AssetType.Texture, entry.getValue()));
-            }
+               if (modelData == null) {
+                   System.err.println("Can't find model " + state.getModel());
+                   return;
+               }
 
-            model.setFull(modelData.full());
+               BlockModel model = new BlockModel();
+               model.setType(modelData.type());
 
-            block.setModel(model);
+               for (Map.Entry<String, String> entry : modelData.textures().entrySet()) {
+                   model.getTextures().put(entry.getKey(), AssetManager.INSTANCE.get(AssetType.Texture, entry.getValue()));
+               }
+
+               model.setFull(modelData.full());
+
+               Block.BlockStateBuilder stateBuilder = block.getBlockStateBuilder();
+
+               for (Map.Entry<String, Object> property : state.getProperties().entrySet()) {
+                   stateBuilder.with(property.getKey(), (Comparable<?>) property.getValue());
+               }
+
+               stateBuilder.get().setModel(model);
+           }
         }
     }
 }

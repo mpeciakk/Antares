@@ -1,0 +1,12 @@
+{
+  "type": "cube",
+  "textures": {
+    "front": "cobblestone",
+    "back": "cobblestone",
+    "left": "cobblestone",
+    "right": "cobblestone",
+    "bottom": "cobblestone",
+    "top": "cobblestone"
+  },
+  "full": true
+}

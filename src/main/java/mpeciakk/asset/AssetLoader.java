@@ -2,25 +2,24 @@ package mpeciakk.asset;
 
 import com.google.gson.*;
 import mpeciakk.asset.data.BlockModelData;
+import mpeciakk.asset.data.BlockStateData;
 import mpeciakk.asset.data.ShadersData;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AssetLoader {
 
     public final static AssetLoader INSTANCE = new AssetLoader();
 
     private final Gson blockModelGson = new GsonBuilder().registerTypeAdapter(BlockModelData.class, new BlockModelDeserializer()).create();
+    private final Gson blockStateGson = new GsonBuilder().create();
 
     public void load() {
         loadShader("simple");
@@ -28,11 +27,23 @@ public class AssetLoader {
         loadShader("text");
         loadShader("chunk");
 
-        loadImage("cobblestone");
-        loadImage("dirt");
+        for (String path : getFiles("/textures/")) {
+            String file = path.split("\\.")[0];
 
-        loadBlockModel("cobblestone");
-        loadBlockModel("air");
+            loadImage(file);
+        }
+
+        for (String path : getFiles("/models/block/")) {
+            String file = path.split("\\.")[0];
+
+            loadBlockModel(file);
+        }
+
+        for (String path : getFiles("/blockstates/")) {
+            String file = path.split("\\.")[0];
+
+            loadBlockState(file);
+        }
     }
 
     public void loadShader(String shader) {
@@ -70,6 +81,34 @@ public class AssetLoader {
         AssetManager.INSTANCE.register(AssetType.BlockModel, model, blockModel);
     }
 
+    private void loadBlockState(String state) {
+        String basePath = "/blockstates/";
+        String path = basePath + state + ".json";
+
+        BlockStateData blockModel = blockStateGson.fromJson(getTextFile(path), BlockStateData.class);
+
+        AssetManager.INSTANCE.register(AssetType.BlockState, state, blockModel);
+    }
+
+    private List<String> getFiles(String path) {
+        List<String> results = new ArrayList<>();
+
+        File[] files = new File[0];
+        try {
+            files = new File(getResource(path).toURI()).listFiles();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        for (File file : files) {
+            if (file.isFile()) {
+                results.add(file.getName());
+            }
+        }
+
+        return results;
+    }
+
     private String getTextFile(String path) {
         try (InputStreamReader streamReader = new InputStreamReader(getFileStream(path), StandardCharsets.UTF_8);
              BufferedReader reader = new BufferedReader(streamReader)) {
@@ -94,13 +133,33 @@ public class AssetLoader {
             path = "/" + path;
         }
 
-        InputStream inputStream = AssetLoader.class.getResourceAsStream(path);
+        InputStream inputStream = getResourceStream(path);
 
         if (inputStream == null) {
             throw new IllegalArgumentException("File not found! (" + path + ")");
         } else {
             return inputStream;
         }
+    }
+
+    private InputStream getResourceStream(String path) {
+        URL url = getResource(path);
+
+        if (url == null) {
+            System.err.println("Can't find resource " + path);
+        }
+
+        try {
+            return url.openStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private URL getResource(String path) {
+        return AssetLoader.class.getResource(path);
     }
 
     public static class BlockModelDeserializer implements JsonDeserializer<BlockModelData> {
