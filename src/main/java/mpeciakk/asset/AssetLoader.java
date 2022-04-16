@@ -37,10 +37,11 @@ public class AssetLoader {
     private final Gson blockStateGson = new GsonBuilder().setObjectToNumberStrategy(ToNumberPolicy.INTEGER).create();
 
     public void load() {
-        loadShader("simple");
-        loadShader("complex");
-        loadShader("text");
-        loadShader("chunk");
+        for (String path : getFiles("/shaders/")) {
+            String file = path.split("\\.")[0];
+
+            loadShader(file);
+        }
 
         for (String path : getFiles("/textures/")) {
             String file = path.split("\\.")[0];
