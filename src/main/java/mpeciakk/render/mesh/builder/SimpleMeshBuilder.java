@@ -3,11 +3,7 @@ package mpeciakk.render.mesh.builder;
 import mpeciakk.asset.data.Texture;
 import mpeciakk.render.mesh.SimpleMesh;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class SimpleMeshBuilder {
-    protected List<Integer> vertices = new ArrayList<>();
+public class SimpleMeshBuilder extends MeshBuilder<Integer> {
 
     public void drawCuboid(int x, int y, int z, int w, int h, int d, Texture textureFront, Texture textureBack, Texture textureLeft, Texture textureRight, Texture textureBottom, Texture textureTop, boolean front, boolean back, boolean left, boolean right, boolean bottom, boolean top) {
         int textureIdFront = textureFront.index();
@@ -62,11 +58,8 @@ public class SimpleMeshBuilder {
         }
     }
 
-    public SimpleMesh getMesh() {
+    @Override
+    public SimpleMesh build() {
         return (SimpleMesh) new SimpleMesh().setVertices(vertices).flush();
-    }
-
-    public List<Integer> getVertices() {
-        return vertices;
     }
 }

@@ -1,6 +1,6 @@
 package mpeciakk.shader;
 
-import mpeciakk.asset.data.ShadersData;
+import mpeciakk.asset.data.ShaderData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -21,9 +21,9 @@ public abstract class Shader {
     private final Map<String, Integer> locationCache = new HashMap<>();
     private FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
-    public Shader(ShadersData shadersData) {
-        this.vertexId = loadShader(shadersData.vs(), GL_VERTEX_SHADER);
-        this.fragmentId = loadShader(shadersData.fs(), GL_FRAGMENT_SHADER);
+    public Shader(ShaderData shaderData) {
+        this.vertexId = loadShader("#version 400 core\n#define VERTEX\n" + shaderData.content(), GL_VERTEX_SHADER);
+        this.fragmentId = loadShader("#version 400 core\n#define FRAGMENT\n" + shaderData.content(), GL_FRAGMENT_SHADER);
 
         this.programId = glCreateProgram();
 

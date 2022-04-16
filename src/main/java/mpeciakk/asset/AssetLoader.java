@@ -4,7 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import mpeciakk.asset.data.BlockModelData;
 import mpeciakk.asset.data.BlockStateData;
-import mpeciakk.asset.data.ShadersData;
+import mpeciakk.asset.data.ShaderData;
 import mpeciakk.model.JsonModel;
 
 import javax.imageio.ImageIO;
@@ -63,13 +63,11 @@ public class AssetLoader {
 
     public void loadShader(String shader) {
         String basePath = "/shaders/";
-        String fsPath = basePath + shader + ".fs.glsl";
-        String vsPath = basePath + shader + ".vs.glsl";
+        String shaderPath = basePath + shader + ".glsl";
 
-        String fs = getTextFile(fsPath);
-        String vs = getTextFile(vsPath);
+        String shaderContent = getTextFile(shaderPath);
 
-        AssetManager.INSTANCE.register(AssetType.Shader, shader, new ShadersData(fs, vs));
+        AssetManager.INSTANCE.register(AssetType.Shader, shader, new ShaderData(shaderContent));
     }
 
     private void loadImage(String texture) {

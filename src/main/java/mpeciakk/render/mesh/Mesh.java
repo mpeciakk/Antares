@@ -67,18 +67,6 @@ public abstract class Mesh<T> {
         return vbos.size();
     }
 
-    protected IntBuffer getIntBuffer(int[] data) {
-        return BufferUtils.createIntBuffer(data.length)
-                .put(data)
-                .flip();
-    }
-
-    protected FloatBuffer getFloatBuffer(float[] data) {
-        return BufferUtils.createFloatBuffer(data.length)
-                .put(data)
-                .flip();
-    }
-
     public int getVao() {
         return vao;
     }
@@ -91,6 +79,18 @@ public abstract class Mesh<T> {
 
     public boolean isFlushed() {
         return flushed;
+    }
+
+    protected IntBuffer getIntBuffer(int[] data) {
+        return BufferUtils.createIntBuffer(data.length)
+                .put(data)
+                .flip();
+    }
+
+    protected FloatBuffer getFloatBuffer(float[] data) {
+        return BufferUtils.createFloatBuffer(data.length)
+                .put(data)
+                .flip();
     }
 
     @Override

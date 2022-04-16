@@ -3,11 +3,7 @@ package mpeciakk.render.mesh.builder;
 import mpeciakk.render.mesh.ComplexMesh;
 import mpeciakk.render.mesh.Vertex;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ComplexMeshBuilder {
-    private final List<Vertex> vertices = new ArrayList<>();
+public class ComplexMeshBuilder extends MeshBuilder<Vertex> {
 
     public void drawQuad(Vertex a, Vertex b, Vertex c, Vertex d) {
         vertices.add(a);
@@ -16,11 +12,8 @@ public class ComplexMeshBuilder {
         vertices.add(d);
     }
 
-    public ComplexMesh getMesh() {
+    @Override
+    public ComplexMesh build() {
         return (ComplexMesh) new ComplexMesh().setVertices(vertices).flush();
-    }
-
-    public List<Vertex> getVertices() {
-        return vertices;
     }
 }

@@ -1,5 +1,7 @@
 package mpeciakk.render.mesh;
 
+import java.nio.FloatBuffer;
+
 public class ComplexMesh extends Mesh<Vertex> {
 
     private VBO verticesBuffer;
@@ -28,8 +30,14 @@ public class ComplexMesh extends Mesh<Vertex> {
             uvArray[j++] = vertex.getTextureCoordinate().y;
         }
 
-        verticesBuffer.flush(getFloatBuffer(verticesArray));
-        uvBuffer.flush(getFloatBuffer(uvArray));
+        FloatBuffer vertices = getFloatBuffer(verticesArray);
+        FloatBuffer uvs = getFloatBuffer(uvArray);
+
+        verticesBuffer.flush(vertices);
+        uvBuffer.flush(uvs);
+
+        vertices.clear();
+        uvs.clear();
 
         stop();
 

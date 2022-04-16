@@ -40,12 +40,11 @@ public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
             shader.loadVector("highlightedBlock", chunk.getHighlightedBlock().asVector());
             shader.stop();
 
-//            if (chunk.getSimpleBlocksMesh().isFlushed()) {
-//                render(chunk.getSimpleBlocksMesh());
-//            }
+            if (chunk.getSimpleBlocksMesh().isFlushed()) {
+                render(chunk.getSimpleBlocksMesh());
+            }
 
             if (chunk.getComplexBlocksMesh().isFlushed()) {
-                System.out.println(chunk.getComplexBlocksMesh());
                 render(chunk.getComplexBlocksMesh());
             }
         }

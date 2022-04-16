@@ -215,7 +215,7 @@ public class FontManager {
 
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        meshBuilder.getMesh().clear();
+        meshBuilder.build().clear();
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
@@ -245,7 +245,7 @@ public class FontManager {
             drawX += g.width();
         }
 
-        return meshBuilder.getMesh();
+        return meshBuilder.build();
     }
 
     public int getTexture() {
