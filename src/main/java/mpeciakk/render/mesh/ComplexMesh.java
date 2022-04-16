@@ -1,7 +1,5 @@
 package mpeciakk.render.mesh;
 
-import java.util.Arrays;
-
 public class ComplexMesh extends Mesh<Vertex> {
 
     private VBO verticesBuffer;
@@ -34,6 +32,8 @@ public class ComplexMesh extends Mesh<Vertex> {
         uvBuffer.flush(getFloatBuffer(uvArray));
 
         stop();
+
+        flushed = true;
 
         return this;
     }

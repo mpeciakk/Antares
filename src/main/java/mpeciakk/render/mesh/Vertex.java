@@ -20,6 +20,12 @@ public class Vertex {
         this.normal = new Vector3f(nx, ny, nz);
     }
 
+    public Vertex(Vector3f position, float u, float v, float nx, float ny, float nz) {
+        this.position = position;
+        this.textureCoordinate = new Vector2f(u, v);
+        this.normal = new Vector3f(nx, ny, nz);
+    }
+
     public Vector3f getPosition() {
         return position;
     }

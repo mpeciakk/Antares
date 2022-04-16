@@ -1,5 +1,8 @@
 package mpeciakk.render.renderers;
 
+import mpeciakk.asset.AssetManager;
+import mpeciakk.asset.AssetType;
+import mpeciakk.asset.TextureAtlas;
 import mpeciakk.model.Model;
 import mpeciakk.model.ModelPart;
 import mpeciakk.shader.ComplexShader;
@@ -16,12 +19,12 @@ public class ModelRenderer extends MeshRenderer<Model> {
             shader.start();
             shader.loadTransformationMatrix(part.getTransformationMatrix());
             shader.stop();
-            render(part.getMesh());
+//            render(part.getMesh());
         }
     }
 
     @Override
     protected int bindTexture() {
-        return 0;
+        return ((TextureAtlas) AssetManager.INSTANCE.get(AssetType.TextureAtlas, "blocks")).getTexture();
     }
 }

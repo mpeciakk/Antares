@@ -23,6 +23,7 @@ import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 public class FontManager {
 
     private final Map<Character, Glyph> glyphs = new HashMap<>();
+    private final ComplexMeshBuilder meshBuilder = new ComplexMeshBuilder();
 
     private final int texture;
     private int fontHeight;
@@ -214,7 +215,7 @@ public class FontManager {
 
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        ComplexMeshBuilder meshBuilder = new ComplexMeshBuilder();
+        meshBuilder.getMesh().clear();
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);

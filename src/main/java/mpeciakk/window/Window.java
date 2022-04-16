@@ -56,7 +56,7 @@ public class Window {
         }
 
         glfwMakeContextCurrent(id);
-        glfwSwapInterval(0);
+//        glfwSwapInterval(0);
         glfwShowWindow(id);
 
         glfwSetInputMode(id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

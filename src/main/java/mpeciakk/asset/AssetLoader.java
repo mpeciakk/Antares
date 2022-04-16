@@ -5,6 +5,7 @@ import com.google.gson.stream.JsonReader;
 import mpeciakk.asset.data.BlockModelData;
 import mpeciakk.asset.data.BlockStateData;
 import mpeciakk.asset.data.ShadersData;
+import mpeciakk.model.JsonModel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -123,7 +124,7 @@ public class AssetLoader {
         return results;
     }
 
-    private String getTextFile(String path) {
+    public String getTextFile(String path) {
         try (InputStreamReader streamReader = new InputStreamReader(getFileStream(path), StandardCharsets.UTF_8);
              BufferedReader reader = new BufferedReader(streamReader)) {
 
@@ -180,6 +181,8 @@ public class AssetLoader {
 
         @Override
         public BlockModelData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String type = json.getAsJsonObject().get("type").getAsString();
+
             JsonObject textures = json.getAsJsonObject().get("textures").getAsJsonObject();
             Set<String> textureKeys = textures.keySet();
 
@@ -189,7 +192,9 @@ public class AssetLoader {
                 texturesMap.put(textureKey, textures.get(textureKey).getAsString());
             }
 
-            return new BlockModelData(json.getAsJsonObject().get("type").getAsString(), texturesMap, json.getAsJsonObject().get("full").getAsBoolean());
+            JsonModel.Element[] elements = context.deserialize(json.getAsJsonObject().get("elements"), JsonModel.Element[].class);
+
+            return new BlockModelData(type, texturesMap, json.getAsJsonObject().get("full").getAsBoolean(), elements);
         }
     }
 }

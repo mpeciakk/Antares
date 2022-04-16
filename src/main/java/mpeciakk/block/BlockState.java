@@ -1,6 +1,7 @@
 package mpeciakk.block;
 
 import mpeciakk.block.property.Property;
+import mpeciakk.model.block.BlockModel;
 
 import java.util.List;
 import java.util.Map;

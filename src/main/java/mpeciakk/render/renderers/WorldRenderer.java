@@ -29,7 +29,8 @@ public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
             }
 
             if (chunk.getState() == ChunkMeshState.UPDATED) {
-                chunk.getMesh().flush();
+                chunk.getSimpleBlocksMesh().flush();
+                chunk.getComplexBlocksMesh().flush();
 
                 chunk.setState(ChunkMeshState.NONE);
             }
@@ -39,8 +40,13 @@ public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
             shader.loadVector("highlightedBlock", chunk.getHighlightedBlock().asVector());
             shader.stop();
 
-            if (chunk.getMesh().isFlushed()) {
-                render(chunk.getMesh());
+//            if (chunk.getSimpleBlocksMesh().isFlushed()) {
+//                render(chunk.getSimpleBlocksMesh());
+//            }
+
+            if (chunk.getComplexBlocksMesh().isFlushed()) {
+                System.out.println(chunk.getComplexBlocksMesh());
+                render(chunk.getComplexBlocksMesh());
             }
         }
     }

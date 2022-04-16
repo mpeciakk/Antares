@@ -1,9 +1,16 @@
 package mpeciakk.world.chunk;
 
 import mpeciakk.asset.data.Texture;
-import mpeciakk.block.*;
+import mpeciakk.block.BlockPos;
+import mpeciakk.block.BlockState;
+import mpeciakk.block.Blocks;
+import mpeciakk.block.TestBlock;
 import mpeciakk.debug.DebugTools;
+import mpeciakk.model.ModelPart;
+import mpeciakk.model.block.BlockModel;
+import mpeciakk.render.mesh.ComplexMesh;
 import mpeciakk.render.mesh.SimpleMesh;
+import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
 import mpeciakk.render.mesh.builder.SimpleMeshBuilder;
 import mpeciakk.util.Direction;
 import mpeciakk.world.World;
@@ -20,7 +27,9 @@ public class Chunk {
     private final int z;
     private final World world;
 
-    private final SimpleMesh mesh = new SimpleMesh();
+    private final SimpleMesh simpleBlocksMesh = new SimpleMesh();
+    private final ComplexMesh complexBlocksMesh = new ComplexMesh();
+
     private final Matrix4f transformationMatrix;
     private ChunkMeshState state;
     private BlockPos highlightedBlock = new BlockPos(2137, 2137, 2137);
@@ -42,24 +51,24 @@ public class Chunk {
             }
         }
 
-        setBlock(0, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, false).with(TestBlock.property2, 0).with(TestBlock.property3, false).get());
+        setBlock(0, 0, 0, Blocks.ANVIL.getDefaultState());
         setBlock(1, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, true).with(TestBlock.property2, 3).with(TestBlock.property3, true).get());
-
+//
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int z = 0; z < CHUNK_SIZE; z++) {
 //                setBlock(x, (int) world.getNoise().generateHeight(x + this.x * CHUNK_SIZE, z + this.z * CHUNK_SIZE) + 20, z, Blocks.COBBLESTONE);
 //            }
 //        }
 
-//        for (int x = 0; x < CHUNK_SIZE; x++) {
-//            for (int y = 0; y < 256; y++) {
-//                for (int z = 0; z < CHUNK_SIZE; z++) {
-//                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.2) {
-//                        setBlock(x, y - 18, z, Blocks.COBBLESTONE.getDefaultState());
-//                    }
-//                }
-//            }
-//        }
+        for (int x = 0; x < CHUNK_SIZE; x++) {
+            for (int y = 0; y < 256; y++) {
+                for (int z = 0; z < CHUNK_SIZE; z++) {
+                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.2) {
+                        setBlock(x, y - 18, z, Blocks.COBBLESTONE.getDefaultState());
+                    }
+                }
+            }
+        }
 
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -106,7 +115,8 @@ public class Chunk {
     }
 
     public void updateMesh() {
-        SimpleMeshBuilder meshBuilder = new SimpleMeshBuilder();
+        SimpleMeshBuilder simpleBlocksMeshBuilder = new SimpleMeshBuilder();
+        ComplexMeshBuilder complexBlocksMeshBuilder = new ComplexMeshBuilder();
 
         for (int bx = 0; bx < 16; bx++) {
             for (int by = 0; by < 256; by++) {
@@ -133,17 +143,24 @@ public class Chunk {
                         Texture bottom = model.getTextures().get("bottom");
                         Texture top = model.getTextures().get("top");
 
-                        if (DebugTools.naive) {
-                            meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, northBlock == null || !northBlock.getModel().isFull(), southBlock == null || !southBlock.getModel().isFull(), eastBlock == null || !eastBlock.getModel().isFull(), westBlock == null || !westBlock.getModel().isFull(), downBlock == null || !downBlock.getModel().isFull(), upBlock == null || !upBlock.getModel().isFull());
+                        if (model.isComplex()) {
+                            for (ModelPart part : model.getParts()) {
+                                part.draw(complexBlocksMeshBuilder);
+                            }
                         } else {
-                            meshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, true, true, true, true, true, true);
+                            if (DebugTools.naive) {
+                                simpleBlocksMeshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, northBlock == null || !northBlock.getModel().isFull(), southBlock == null || !southBlock.getModel().isFull(), eastBlock == null || !eastBlock.getModel().isFull(), westBlock == null || !westBlock.getModel().isFull(), downBlock == null || !downBlock.getModel().isFull(), upBlock == null || !upBlock.getModel().isFull());
+                            } else {
+                                simpleBlocksMeshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, true, true, true, true, true, true);
+                            }
                         }
                     }
                 }
             }
         }
 
-        mesh.setVertices(meshBuilder.getVertices());
+        simpleBlocksMesh.setVertices(simpleBlocksMeshBuilder.getVertices());
+        complexBlocksMesh.setVertices(complexBlocksMeshBuilder.getVertices());
 
         state = ChunkMeshState.UPDATED;
     }
@@ -156,8 +173,12 @@ public class Chunk {
         this.state = state;
     }
 
-    public SimpleMesh getMesh() {
-        return mesh;
+    public SimpleMesh getSimpleBlocksMesh() {
+        return simpleBlocksMesh;
+    }
+
+    public ComplexMesh getComplexBlocksMesh() {
+        return complexBlocksMesh;
     }
 
     public int getX() {

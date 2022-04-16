@@ -36,6 +36,7 @@ public class JsonModel {
         public static class Face {
             private float[] uv;
             private String texture;
+            private int rotation;
 
             public float[] getUv() {
                 return uv;
@@ -43,6 +44,10 @@ public class JsonModel {
 
             public String getTexture() {
                 return texture;
+            }
+
+            public int getRotation() {
+                return rotation;
             }
         }
     }

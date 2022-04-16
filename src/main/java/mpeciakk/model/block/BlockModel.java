@@ -1,38 +1,36 @@
-package mpeciakk.block;
+package mpeciakk.model.block;
 
 import mpeciakk.asset.data.Texture;
+import mpeciakk.model.Model;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockModel {
+public class BlockModel extends Model {
     private String type;
     private boolean full;
 
-    private Map<String, Texture> textures = new HashMap<>();
+    private final Map<String, Texture> textures = new HashMap<>();
+
+    public BlockModel(String type, boolean full) {
+        this.type = type;
+        this.full = full;
+    }
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public boolean isFull() {
         return full;
     }
 
-    public void setFull(boolean full) {
-        this.full = full;
-    }
-
     public Map<String, Texture> getTextures() {
         return textures;
     }
 
-    public void setTextures(Map<String, Texture> textures) {
-        this.textures = textures;
+    public boolean isComplex() {
+        return !type.equals("cube");
     }
 
     @Override
