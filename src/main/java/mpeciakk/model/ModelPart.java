@@ -5,14 +5,11 @@ import mpeciakk.asset.AssetType;
 import mpeciakk.asset.data.Texture;
 import mpeciakk.render.mesh.Vertex;
 import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.Map;
 
 public class ModelPart {
-
-    private final Matrix4f transformationMatrix = new Matrix4f().identity();
 
     private final float[] from;
     private final float[] to;
@@ -30,7 +27,7 @@ public class ModelPart {
         this.faces = faces;
     }
 
-    public void draw(ComplexMeshBuilder meshBuilder) {
+    public void draw(ComplexMeshBuilder meshBuilder, Vector3f offset) {
         Texture texture = AssetManager.INSTANCE.get(AssetType.Texture, "anvil");
 
         float atlasSize = 16.0f;
@@ -41,18 +38,19 @@ public class ModelPart {
         int row = (int) Math.floor(tid / atlasSize);
 
         // v + x offset + y offset + z offset
-        Vector3f v000 = new Vector3f(from[0] / blockScale, from[1] / blockScale, from[2] / blockScale);
-        Vector3f v100 = new Vector3f(to[0] / blockScale, from[1] / blockScale, from[2] / blockScale);
-        Vector3f v110 = new Vector3f(to[0] / blockScale, to[1] / blockScale, from[2] / blockScale);
-        Vector3f v010 = new Vector3f(from[0] / blockScale, to[1] / blockScale, from[2] / blockScale);
+        Vector3f v000 = new Vector3f(from[0] / blockScale + offset.x, from[1] / blockScale + offset.y, from[2] / blockScale + offset.z);
+        Vector3f v100 = new Vector3f(to[0] / blockScale + offset.x, from[1] / blockScale + offset.y, from[2] / blockScale + offset.z);
+        Vector3f v110 = new Vector3f(to[0] / blockScale + offset.x, to[1] / blockScale + offset.y, from[2] / blockScale + offset.z);
+        Vector3f v010 = new Vector3f(from[0] / blockScale + offset.x, to[1] / blockScale + offset.y, from[2] / blockScale + offset.z);
 
-        Vector3f v001 = new Vector3f(from[0] / blockScale, from[1] / blockScale, to[2] / blockScale);
-        Vector3f v101 = new Vector3f(to[0] / blockScale, from[1] / blockScale, to[2] / blockScale);
-        Vector3f v111 = new Vector3f(to[0] / blockScale, to[1] / blockScale, to[2] / blockScale);
-        Vector3f v011 = new Vector3f(from[0] / blockScale, to[1] / blockScale, to[2] / blockScale);
+        Vector3f v001 = new Vector3f(from[0] / blockScale + offset.x, from[1] / blockScale + offset.y, to[2] / blockScale + offset.z);
+        Vector3f v101 = new Vector3f(to[0] / blockScale + offset.x, from[1] / blockScale + offset.y, to[2] / blockScale + offset.z);
+        Vector3f v111 = new Vector3f(to[0] / blockScale + offset.x, to[1] / blockScale + offset.y, to[2] / blockScale + offset.z);
+        Vector3f v011 = new Vector3f(from[0] / blockScale + offset.x, to[1] / blockScale + offset.y, to[2] / blockScale + offset.z);
 
         if (faces.containsKey("west")) {
             float[] west = faces.get("west").getUv();
+
             int[] uvIndexes = getUvIndexes(faces.get("west").getRotation());
 
             meshBuilder.drawQuad(
@@ -140,14 +138,6 @@ public class ModelPart {
         }
 
         return uv;
-    }
-
-    public void rotate(float x, float y, float z) {
-        transformationMatrix.rotateXYZ(x, y, z);
-    }
-
-    public Matrix4f getTransformationMatrix() {
-        return transformationMatrix;
     }
 
     public String getName() {

@@ -15,6 +15,7 @@ import mpeciakk.render.mesh.builder.SimpleMeshBuilder;
 import mpeciakk.util.Direction;
 import mpeciakk.world.World;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 public class Chunk {
@@ -51,7 +52,9 @@ public class Chunk {
             }
         }
 
-        setBlock(0, 0, 0, Blocks.ANVIL.getDefaultState());
+//        setBlock(0, 0, 0, Blocks.ANVIL.getDefaultState());
+//        setBlock(2, 0, 0, Blocks.ANVIL.getDefaultState());
+        setBlock(3, 0, 0, Blocks.ANVIL.getDefaultState());
         setBlock(1, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, true).with(TestBlock.property2, 3).with(TestBlock.property3, true).get());
 //
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
@@ -145,7 +148,7 @@ public class Chunk {
 
                         if (model.isComplex()) {
                             for (ModelPart part : model.getParts()) {
-                                part.draw(complexBlocksMeshBuilder);
+                                part.draw(complexBlocksMeshBuilder, new Vector3f(position));
                             }
                         } else {
                             if (DebugTools.naive) {

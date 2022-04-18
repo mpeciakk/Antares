@@ -97,12 +97,6 @@ void main() {
     } else {
         out_Color = texture(sampler, out_textureCoords);
     }
-
-    //    if (outline > 0.999f) {
-    //        out_Color = vec4(outline, 0f, 0f, 1f);
-    //    } else {
-    //        out_Color = texture(sampler, out_textureCoords);
-    //    }
 }
 
 #endif

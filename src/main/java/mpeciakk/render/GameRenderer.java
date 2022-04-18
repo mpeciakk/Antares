@@ -3,7 +3,6 @@ package mpeciakk.render;
 import mpeciakk.MinecraftClient;
 import mpeciakk.block.BlockPos;
 import mpeciakk.block.Blocks;
-import mpeciakk.render.renderers.ModelRenderer;
 import mpeciakk.render.renderers.TextRenderer;
 import mpeciakk.render.renderers.WorldRenderer;
 import mpeciakk.util.Raycaster;
@@ -19,7 +18,6 @@ public class GameRenderer {
 
     private final Camera camera;
 
-    private final ModelRenderer modelRenderer;
     private final TextRenderer textRenderer;
     private final WorldRenderer worldRenderer;
 
@@ -35,7 +33,6 @@ public class GameRenderer {
 
         this.camera = new Camera(client.getWindow().getWidth(), client.getWindow().getHeight());
 
-        this.modelRenderer = new ModelRenderer();
         this.textRenderer = new TextRenderer(client.getFontManager());
         this.worldRenderer = new WorldRenderer();
 
@@ -54,7 +51,7 @@ public class GameRenderer {
 
         worldRenderer.render(world);
 
-        textRenderer.render(String.valueOf(client.getFps()), 0, 0);
+//        textRenderer.render(String.valueOf(client.getFps()), 0, 0);
 
         Vector3f dir = new Vector3f();
         dir = camera.getViewMatrix().positiveZ(dir).negate();
@@ -72,7 +69,7 @@ public class GameRenderer {
         }
 
         if (client.getInputManager().isButtonPressed(1) && timer == 0) {
-            world.setBlock(selectedBlock.offset(hit.face()).asVector(), Blocks.COBBLESTONE.getDefaultState());
+            world.setBlock(selectedBlock.offset(hit.face()).asVector(), Blocks.ANVIL.getDefaultState());
             timer = 50;
         }
 

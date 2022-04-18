@@ -9,13 +9,13 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public abstract class MeshRenderer<T> {
 
-    protected final Shader shader;
+    protected final Shader defaultShader;
 
     public MeshRenderer(Shader shader) {
-        this.shader = shader;
+        this.defaultShader = shader;
     }
 
-    public void preRender(Mesh<?> mesh) {
+    public void preRender(Shader shader, Mesh<?> mesh) {
         shader.start();
         glBindTexture(GL_TEXTURE_2D, bindTexture());
         glBindVertexArray(mesh.getVao());
@@ -26,19 +26,23 @@ public abstract class MeshRenderer<T> {
     }
 
     public abstract void render(T t);
-
+    
     public void render(Mesh<?> mesh) {
-        preRender(mesh);
+        render(defaultShader, mesh);
+    }
+    
+    public void render(Shader shader, Mesh<?> mesh) {
+        preRender(shader, mesh);
 
         shader.loadProjectionMatrix(MinecraftClient.getInstance().getGameRenderer().getCamera().getProjectionMatrix());
         shader.loadViewMatrix(MinecraftClient.getInstance().getGameRenderer().getCamera().getViewMatrix());
 
         glDrawArrays(GL_QUADS, 0, mesh.getVerticesCount());
 
-        postRender(mesh);
+        postRender(shader, mesh);
     }
 
-    public void postRender(Mesh<?> mesh) {
+    public void postRender(Shader shader, Mesh<?> mesh) {
         for (int i = 0; i < mesh.getVbosCount(); i++) {
             glDisableVertexAttribArray(i);
         }

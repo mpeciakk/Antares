@@ -24,6 +24,8 @@ public class SimpleMesh extends Mesh<Integer> {
 
         flushed = true;
 
+        System.out.println("nietl");
+
         return this;
     }
 }
