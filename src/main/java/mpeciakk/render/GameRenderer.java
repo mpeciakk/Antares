@@ -1,7 +1,7 @@
 package mpeciakk.render;
 
 import mpeciakk.MinecraftClient;
-import mpeciakk.block.BlockPos;
+import mpeciakk.util.BlockPos;
 import mpeciakk.block.Blocks;
 import mpeciakk.render.renderers.TextRenderer;
 import mpeciakk.render.renderers.WorldRenderer;
@@ -69,12 +69,12 @@ public class GameRenderer {
         }
 
         if (client.getInputManager().isButtonPressed(1) && timer == 0) {
-            world.setBlock(selectedBlock.offset(hit.face()).asVector(), Blocks.ANVIL.getDefaultState());
+            world.setBlock(selectedBlock.offset(hit.face()), Blocks.ANVIL.getDefaultState());
             timer = 50;
         }
 
         if (client.getInputManager().isButtonPressed(0) && timer == 0) {
-            world.setBlock(selectedBlock.asVector(), Blocks.AIR.getDefaultState());
+            world.setBlock(selectedBlock, Blocks.AIR.getDefaultState());
             timer = 50;
         }
 

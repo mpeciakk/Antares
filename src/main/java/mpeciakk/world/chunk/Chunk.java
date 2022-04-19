@@ -1,21 +1,14 @@
 package mpeciakk.world.chunk;
 
-import mpeciakk.asset.data.Texture;
-import mpeciakk.block.BlockPos;
-import mpeciakk.block.BlockState;
+import mpeciakk.util.BlockPos;
+import mpeciakk.block.state.BlockState;
 import mpeciakk.block.Blocks;
-import mpeciakk.block.TestBlock;
-import mpeciakk.debug.DebugTools;
-import mpeciakk.model.ModelPart;
-import mpeciakk.model.block.BlockModel;
 import mpeciakk.render.mesh.ComplexMesh;
 import mpeciakk.render.mesh.SimpleMesh;
 import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
 import mpeciakk.render.mesh.builder.SimpleMeshBuilder;
-import mpeciakk.util.Direction;
 import mpeciakk.world.World;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 public class Chunk {
@@ -54,8 +47,8 @@ public class Chunk {
 
 //        setBlock(0, 0, 0, Blocks.ANVIL.getDefaultState());
 //        setBlock(2, 0, 0, Blocks.ANVIL.getDefaultState());
-        setBlock(3, 0, 0, Blocks.ANVIL.getDefaultState());
-        setBlock(1, 0, 0, Blocks.TEST_BLOCK.getBlockStateBuilder().with(TestBlock.property1, true).with(TestBlock.property2, 3).with(TestBlock.property3, true).get());
+        setBlock(3, 0, 0, Blocks.COBBLESTONE.getDefaultState());
+        setBlock(1, 0, 0, Blocks.TEST_BLOCK.getDefaultState());
 //
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -92,8 +85,8 @@ public class Chunk {
         setState(ChunkMeshState.REQUESTED_UPDATE);
     }
 
-    public BlockState getBlock(Vector3i position) {
-        return getBlock(position.x, position.y, position.z);
+    public BlockState getBlock(BlockPos position) {
+        return getBlock(position.getX(), position.getY(), position.getZ());
     }
 
     public BlockState getBlock(int x, int y, int z) {
@@ -124,38 +117,16 @@ public class Chunk {
         for (int bx = 0; bx < 16; bx++) {
             for (int by = 0; by < 256; by++) {
                 for (int bz = 0; bz < 16; bz++) {
-                    BlockState block = blocks[bx][by][bz];
+                    BlockState state = blocks[bx][by][bz];
 
-                    Vector3i position = new Vector3i(bx, by, bz);
-                    Vector3i worldPosition = new Vector3i(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE).add(position);
+                    BlockPos localPosition = new BlockPos(bx, by, bz);
+                    BlockPos position = new BlockPos(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE).add(localPosition);
 
-                    if (block != null && block != Blocks.AIR.getDefaultState()) {
-                        BlockState northBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.NORTH));
-                        BlockState southBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.SOUTH));
-                        BlockState eastBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.EAST));
-                        BlockState westBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.WEST));
-                        BlockState upBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.UP));
-                        BlockState downBlock = world.getBlock(new BlockPos(worldPosition.x, worldPosition.y, worldPosition.z).offset(Direction.DOWN));
-
-                        BlockModel model = block.getModel();
-
-                        Texture front = model.getTextures().get("front");
-                        Texture back = model.getTextures().get("back");
-                        Texture left = model.getTextures().get("left");
-                        Texture right = model.getTextures().get("right");
-                        Texture bottom = model.getTextures().get("bottom");
-                        Texture top = model.getTextures().get("top");
-
-                        if (model.isComplex()) {
-                            for (ModelPart part : model.getParts()) {
-                                part.draw(complexBlocksMeshBuilder, new Vector3f(position));
-                            }
+                    if (state != null && state.getBlock().hasBlockRenderer()) {
+                        if (state.getModel().isComplex()) {
+                            state.getBlock().getBlockRenderer().render(complexBlocksMeshBuilder, state, state.getModel(), world, localPosition, position);
                         } else {
-                            if (DebugTools.naive) {
-                                simpleBlocksMeshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, northBlock == null || !northBlock.getModel().isFull(), southBlock == null || !southBlock.getModel().isFull(), eastBlock == null || !eastBlock.getModel().isFull(), westBlock == null || !westBlock.getModel().isFull(), downBlock == null || !downBlock.getModel().isFull(), upBlock == null || !upBlock.getModel().isFull());
-                            } else {
-                                simpleBlocksMeshBuilder.drawCuboid(position.x, position.y, position.z, 1, 1, 1, front, back, left, right, bottom, top, true, true, true, true, true, true);
-                            }
+                            state.getBlock().getBlockRenderer().render(simpleBlocksMeshBuilder, state, state.getModel(), world, localPosition, position);
                         }
                     }
                 }

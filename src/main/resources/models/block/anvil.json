@@ -2,7 +2,7 @@
   "type": "complex",
   "full": false,
   "textures": {
-    "particle": "block/anvil",
+    "particle": "anvil",
     "body": "anvil"
   },
   "elements": [

@@ -1,8 +1,8 @@
 package mpeciakk.world;
 
 import de.articdive.jnoise.JNoise;
-import mpeciakk.block.BlockPos;
-import mpeciakk.block.BlockState;
+import mpeciakk.util.BlockPos;
+import mpeciakk.block.state.BlockState;
 import mpeciakk.block.Blocks;
 import mpeciakk.world.chunk.Chunk;
 import mpeciakk.world.chunk.ChunkMeshState;
@@ -57,15 +57,15 @@ public class World {
         return chunk.getBlock(blockX, blockY, blockZ);
     }
 
-    public void setBlock(Vector3i position, BlockState block) {
-        int x = position.x >> 4;
-        int z = position.z >> 4;
+    public void setBlock(BlockPos position, BlockState block) {
+        int x = position.getX() >> 4;
+        int z = position.getZ() >> 4;
 
         Chunk chunk = getChunk(x, z);
 
-        int blockX = position.x - x * Chunk.CHUNK_SIZE;
-        int blockY = position.y;
-        int blockZ = position.z - z * Chunk.CHUNK_SIZE;
+        int blockX = position.getX() - x * Chunk.CHUNK_SIZE;
+        int blockY = position.getY();
+        int blockZ = position.getZ() - z * Chunk.CHUNK_SIZE;
 
         if (chunk == null) {
             return;

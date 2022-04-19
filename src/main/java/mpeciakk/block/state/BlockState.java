@@ -1,5 +1,6 @@
-package mpeciakk.block;
+package mpeciakk.block.state;
 
+import mpeciakk.block.Block;
 import mpeciakk.block.property.Property;
 import mpeciakk.model.block.BlockModel;
 
@@ -34,6 +35,10 @@ public class BlockState {
 
     public void setModel(BlockModel model) {
         this.model = model;
+    }
+
+    public Block getBlock() {
+        return block;
     }
 
     @Override

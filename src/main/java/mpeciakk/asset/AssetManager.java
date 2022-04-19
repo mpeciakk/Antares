@@ -26,7 +26,7 @@ public class AssetManager {
             }
         }
 
-        return null;
+        throw new IllegalStateException("Can't file asset of type " + type + " with name " + name);
     }
 
     public <T> Map<String, T> get(AssetType type) {
@@ -34,7 +34,7 @@ public class AssetManager {
             return (Map<String, T>) assets.get(type);
         }
 
-        return null;
+        throw new IllegalStateException("Can't file assets of type " + type);
     }
 
     public void stitchTextures() {

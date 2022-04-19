@@ -1,5 +1,6 @@
-package mpeciakk.block;
+package mpeciakk.block.state;
 
+import mpeciakk.block.Block;
 import mpeciakk.block.property.Property;
 
 import java.util.ArrayList;

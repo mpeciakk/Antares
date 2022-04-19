@@ -1,6 +1,10 @@
 package mpeciakk.block;
 
 import mpeciakk.block.property.Property;
+import mpeciakk.block.renderer.BlockRenderer;
+import mpeciakk.block.renderer.DefaultBlockRenderer;
+import mpeciakk.block.state.BlockState;
+import mpeciakk.block.state.StateManager;
 
 import java.util.Deque;
 import java.util.HashMap;
@@ -12,14 +16,25 @@ import java.util.stream.Collectors;
 public class Block {
     protected final StateManager stateManager;
 
+    private final BlockRenderer blockRenderer;
+
     public Block() {
         this.stateManager = new StateManager(this);
+        this.blockRenderer = new DefaultBlockRenderer(this);
 
         appendProperties();
         stateManager.updateStates();
     }
 
     protected void appendProperties() {
+    }
+
+    public boolean hasBlockRenderer() {
+        return true;
+    }
+
+    public BlockRenderer getBlockRenderer() {
+        return blockRenderer;
     }
 
     public BlockStateBuilder getBlockStateBuilder() {

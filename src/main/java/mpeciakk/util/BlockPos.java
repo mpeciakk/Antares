@@ -1,6 +1,5 @@
-package mpeciakk.block;
+package mpeciakk.util;
 
-import mpeciakk.util.Direction;
 import org.joml.Vector3i;
 
 public class BlockPos {
@@ -8,6 +7,10 @@ public class BlockPos {
 
     public BlockPos(int x, int y, int z) {
         this.pos = new Vector3i(x, y, z);
+    }
+
+    public BlockPos(BlockPos blockPos) {
+        this.pos = new Vector3i(blockPos.pos);
     }
 
     public BlockPos() {
@@ -21,7 +24,15 @@ public class BlockPos {
     }
 
     public BlockPos offset(Direction direction) {
+//        return new BlockPos(pos.add(direction.getOffset()));
+
         pos.add(direction.getOffset());
+
+        return this;
+    }
+
+    public BlockPos add(BlockPos blockPos) {
+        pos.add(blockPos.pos);
 
         return this;
     }
@@ -40,5 +51,12 @@ public class BlockPos {
 
     public int getZ() {
         return pos.z;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockPos{" +
+                "pos=" + pos +
+                '}';
     }
 }

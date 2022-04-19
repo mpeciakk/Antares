@@ -14,6 +14,7 @@ public record Pair<F, S>(F first, S second) {
         if (!(obj instanceof final Pair<?, ?> other)) {
             return false;
         }
+
         return Objects.equals(first, other.first) && Objects.equals(second, other.second);
     }
 }
