@@ -24,8 +24,6 @@ public class BlockPos {
     }
 
     public BlockPos offset(Direction direction) {
-//        return new BlockPos(pos.add(direction.getOffset()));
-
         pos.add(direction.getOffset());
 
         return this;

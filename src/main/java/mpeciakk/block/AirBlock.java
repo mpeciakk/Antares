@@ -1,6 +1,6 @@
 package mpeciakk.block;
 
-public class Air extends Block {
+public class AirBlock extends Block {
 
     @Override
     public boolean hasBlockRenderer() {

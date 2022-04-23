@@ -4,9 +4,19 @@ import java.util.Map;
 
 public class JsonModel {
     private Element[] elements;
+    private Map<String, String> textures;
+    private String type;
 
     public Element[] getElements() {
         return elements;
+    }
+
+    public Map<String, String> getTextures() {
+        return textures;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public static class Element {

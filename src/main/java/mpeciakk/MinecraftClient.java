@@ -37,12 +37,10 @@ public class MinecraftClient {
     }
 
     public void start() {
-        AssetLoader.INSTANCE.load();
-
         window = new Window(800, 600, "Antares");
         window.create();
 
-        AssetManager.INSTANCE.stitchTextures();
+        AssetLoader.INSTANCE.load();
 
         Blocks.init();
 

@@ -2,7 +2,7 @@ package mpeciakk.block.state;
 
 import mpeciakk.block.Block;
 import mpeciakk.block.property.Property;
-import mpeciakk.model.block.BlockModel;
+import mpeciakk.model.Model;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class BlockState {
 
     private final Block block;
 
-    private BlockModel model;
+    private Model model;
 
     public BlockState(Map<Property<?>, Comparable<?>> properties, List<Property<?>> propertiesOrder, Block block) {
         this.properties = properties;
@@ -29,11 +29,11 @@ public class BlockState {
         return propertiesOrder;
     }
 
-    public BlockModel getModel() {
+    public Model getModel() {
         return model;
     }
 
-    public void setModel(BlockModel model) {
+    public void setModel(Model model) {
         this.model = model;
     }
 

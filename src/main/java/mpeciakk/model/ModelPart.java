@@ -1,7 +1,5 @@
 package mpeciakk.model;
 
-import mpeciakk.asset.AssetManager;
-import mpeciakk.asset.AssetType;
 import mpeciakk.asset.data.Texture;
 import mpeciakk.render.mesh.Vertex;
 import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
@@ -11,31 +9,25 @@ import java.util.Map;
 
 public class ModelPart {
 
-    private final float[] from;
-    private final float[] to;
-    private final String name;
-    private final Map<String, JsonModel.Element.Face> faces;
+    private Model parent;
 
-    public ModelPart(JsonModel.Element element) {
-        this(element.getFrom(), element.getTo(), element.getName(), element.getFaces());
-    }
+    protected String name;
+    protected float[] from;
+    protected float[] to;
+    protected Map<String, JsonModel.Element.Face> faces;
 
-    public ModelPart(float[] from, float[] to, String name, Map<String, JsonModel.Element.Face> faces) {
-        this.name = name;
-        this.from = from;
-        this.to = to;
-        this.faces = faces;
+    public ModelPart(Model parent, JsonModel.Element element) {
+        this.parent = parent;
+
+        this.name = element.getName();
+        this.from = element.getFrom();
+        this.to = element.getTo();
+        this.faces = element.getFaces();
     }
 
     public void draw(ComplexMeshBuilder meshBuilder, Vector3f offset) {
-        Texture texture = AssetManager.INSTANCE.get(AssetType.Texture, "anvil");
-
         float atlasSize = 16.0f;
         float blockScale = 16.0f;
-        int tid = texture.index();
-
-        int col = (int) tid % (int) atlasSize;
-        int row = (int) Math.floor(tid / atlasSize);
 
         // v + x offset + y offset + z offset
         Vector3f v000 = new Vector3f(from[0] / blockScale + offset.x, from[1] / blockScale + offset.y, from[2] / blockScale + offset.z);
@@ -50,8 +42,13 @@ public class ModelPart {
 
         if (faces.containsKey("west")) {
             float[] west = faces.get("west").getUv();
-
             int[] uvIndexes = getUvIndexes(faces.get("west").getRotation());
+
+            Texture texture = parent.getTextures().get(faces.get("west").getTexture());
+            int tid = texture.index();
+
+            int col = (int) tid % (int) atlasSize;
+            int row = (int) Math.floor(tid / atlasSize);
 
             meshBuilder.drawQuad(
                     new Vertex(v000, (col + 1 / blockScale * west[uvIndexes[0]]) / atlasSize, (row + 1 / blockScale * west[uvIndexes[1]]) / atlasSize, 0, 0, 0),
@@ -65,6 +62,12 @@ public class ModelPart {
             float[] east = faces.get("east").getUv();
             int[] uvIndexes = getUvIndexes(faces.get("east").getRotation());
 
+            Texture texture = parent.getTextures().get(faces.get("east").getTexture());
+            int tid = texture.index();
+
+            int col = (int) tid % (int) atlasSize;
+            int row = (int) Math.floor(tid / atlasSize);
+
             meshBuilder.drawQuad(
                     new Vertex(v100, (col + 1 / blockScale * east[uvIndexes[0]]) / atlasSize, (row + 1 / blockScale * east[uvIndexes[1]]) / atlasSize, 0, 0, 0),
                     new Vertex(v101, (col + 1 / blockScale * east[uvIndexes[2]]) / atlasSize, (row + 1 / blockScale * east[uvIndexes[3]]) / atlasSize, 0, 0, 0),
@@ -76,6 +79,12 @@ public class ModelPart {
         if (faces.containsKey("south")) {
             float[] south = faces.get("south").getUv();
             int[] uvIndexes = getUvIndexes(faces.get("south").getRotation());
+
+            Texture texture = parent.getTextures().get(faces.get("south").getTexture());
+            int tid = texture.index();
+
+            int col = (int) tid % (int) atlasSize;
+            int row = (int) Math.floor(tid / atlasSize);
 
             meshBuilder.drawQuad(
                     new Vertex(v001, (col + 1 / blockScale * south[uvIndexes[0]]) / atlasSize, (row + 1 / blockScale * south[uvIndexes[1]]) / atlasSize, 0, 0, 0),
@@ -89,6 +98,12 @@ public class ModelPart {
             float[] north = faces.get("north").getUv();
             int[] uvIndexes = getUvIndexes(faces.get("north").getRotation());
 
+            Texture texture = parent.getTextures().get(faces.get("north").getTexture());
+            int tid = texture.index();
+
+            int col = (int) tid % (int) atlasSize;
+            int row = (int) Math.floor(tid / atlasSize);
+
             meshBuilder.drawQuad(
                     new Vertex(v000, (col + 1 / blockScale * north[uvIndexes[0]]) / atlasSize, (row + 1 / blockScale * north[uvIndexes[1]]) / atlasSize, 0, 0, 0),
                     new Vertex(v100, (col + 1 / blockScale * north[uvIndexes[2]]) / atlasSize, (row + 1 / blockScale * north[uvIndexes[3]]) / atlasSize, 0, 0, 0),
@@ -101,6 +116,12 @@ public class ModelPart {
             float[] up = faces.get("up").getUv();
             int[] uvIndexes = getUvIndexes(faces.get("up").getRotation());
 
+            Texture texture = parent.getTextures().get(faces.get("up").getTexture());
+            int tid = texture.index();
+
+            int col = (int) tid % (int) atlasSize;
+            int row = (int) Math.floor(tid / atlasSize);
+
             meshBuilder.drawQuad(
                     new Vertex(v010, (col + 1 / blockScale * up[uvIndexes[0]]) / atlasSize, (row + 1 / blockScale * up[uvIndexes[1]]) / atlasSize, 0, 0, 0),
                     new Vertex(v110, (col + 1 / blockScale * up[uvIndexes[2]]) / atlasSize, (row + 1 / blockScale * up[uvIndexes[3]]) / atlasSize, 0, 0, 0),
@@ -112,6 +133,12 @@ public class ModelPart {
         if (faces.containsKey("down")) {
             float[] down = faces.get("down").getUv();
             int[] uvIndexes = getUvIndexes(faces.get("down").getRotation());
+
+            Texture texture = parent.getTextures().get(faces.get("down").getTexture());
+            int tid = texture.index();
+
+            int col = (int) tid % (int) atlasSize;
+            int row = (int) Math.floor(tid / atlasSize);
 
             meshBuilder.drawQuad(
                     new Vertex(v000, (col + 1 / blockScale * down[uvIndexes[0]]) / atlasSize, (row + 1 / blockScale * down[uvIndexes[1]]) / atlasSize, 0, 0, 0),

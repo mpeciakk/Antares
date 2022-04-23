@@ -2,12 +2,10 @@ package mpeciakk.registry;
 
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
-import mpeciakk.asset.data.BlockModelData;
 import mpeciakk.asset.data.BlockStateData;
 import mpeciakk.block.Block;
 import mpeciakk.model.JsonModel;
 import mpeciakk.model.ModelPart;
-import mpeciakk.model.block.BlockModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,32 +40,13 @@ public abstract class Registry<T> {
             }
 
             for (BlockStateData.SingleStateData state : stateData.getStates()) {
-                BlockModelData modelData = AssetManager.INSTANCE.get(AssetType.BlockModel, state.getModel());
-
-                if (modelData == null) {
-                    System.err.println("Can't find model " + state.getModel());
-                    return;
-                }
-
-                BlockModel model = new BlockModel(modelData.type(), modelData.full());
-
-                if (!modelData.type().equals("cube")) {
-                    for (JsonModel.Element element : modelData.elements()) {
-                        model.addPart(new ModelPart(element));
-                    }
-                }
-
-                for (Map.Entry<String, String> entry : modelData.textures().entrySet()) {
-                    model.getTextures().put(entry.getKey(), AssetManager.INSTANCE.get(AssetType.Texture, entry.getValue()));
-                }
-
                 Block.BlockStateBuilder stateBuilder = block.getBlockStateBuilder();
 
                 for (Map.Entry<String, Object> property : state.getProperties().entrySet()) {
                     stateBuilder.with(property.getKey(), (Comparable<?>) property.getValue());
                 }
 
-                stateBuilder.get().setModel(model);
+                stateBuilder.get().setModel(AssetManager.INSTANCE.get(AssetType.Model, state.getModel()));
             }
         }
     }

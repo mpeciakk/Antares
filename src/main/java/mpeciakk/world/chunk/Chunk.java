@@ -123,7 +123,7 @@ public class Chunk {
                     BlockPos position = new BlockPos(x * Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE).add(localPosition);
 
                     if (state != null && state.getBlock().hasBlockRenderer()) {
-                        if (state.getModel().isComplex()) {
+                        if (state.getModel().getType().equals("complex")) {
                             state.getBlock().getBlockRenderer().render(complexBlocksMeshBuilder, state, state.getModel(), world, localPosition, position);
                         } else {
                             state.getBlock().getBlockRenderer().render(simpleBlocksMeshBuilder, state, state.getModel(), world, localPosition, position);

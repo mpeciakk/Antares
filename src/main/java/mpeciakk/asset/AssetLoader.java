@@ -2,10 +2,10 @@ package mpeciakk.asset;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import mpeciakk.asset.data.BlockModelData;
 import mpeciakk.asset.data.BlockStateData;
 import mpeciakk.asset.data.ShaderData;
 import mpeciakk.model.JsonModel;
+import mpeciakk.model.Model;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -33,7 +33,6 @@ public class AssetLoader {
 
     public final static AssetLoader INSTANCE = new AssetLoader();
 
-    private final Gson blockModelGson = new GsonBuilder().registerTypeAdapter(BlockModelData.class, new BlockModelDeserializer()).create();
     private final Gson blockStateGson = new GsonBuilder().setObjectToNumberStrategy(ToNumberPolicy.INTEGER).create();
 
     public void load() {
@@ -49,10 +48,12 @@ public class AssetLoader {
             loadImage(file);
         }
 
+        AssetManager.INSTANCE.stitchTextures();
+
         for (String path : getFiles("/models/block/")) {
             String file = path.split("\\.")[0];
 
-            loadBlockModel(file);
+            loadModel(file);
         }
 
         for (String path : getFiles("/blockstates/")) {
@@ -86,13 +87,13 @@ public class AssetLoader {
         AssetManager.INSTANCE.register(AssetType.Image, texture, image);
     }
 
-    private void loadBlockModel(String model) {
+    private void loadModel(String modelName) {
         String basePath = "/models/block/";
-        String path = basePath + model + ".json";
+        String path = basePath + modelName + ".json";
 
-        BlockModelData blockModel = blockModelGson.fromJson(getTextFile(path), BlockModelData.class);
+        Model model = new Model(new Gson().fromJson(getTextFile(path), JsonModel.class));
 
-        AssetManager.INSTANCE.register(AssetType.BlockModel, model, blockModel);
+        AssetManager.INSTANCE.register(AssetType.Model, modelName, model);
     }
 
     private void loadBlockState(String state) {
@@ -174,26 +175,5 @@ public class AssetLoader {
 
     private URL getResource(String path) {
         return AssetLoader.class.getResource(path);
-    }
-
-    public static class BlockModelDeserializer implements JsonDeserializer<BlockModelData> {
-
-        @Override
-        public BlockModelData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            String type = json.getAsJsonObject().get("type").getAsString();
-
-            JsonObject textures = json.getAsJsonObject().get("textures").getAsJsonObject();
-            Set<String> textureKeys = textures.keySet();
-
-            Map<String, String> texturesMap = new HashMap<>();
-
-            for (String textureKey : textureKeys) {
-                texturesMap.put(textureKey, textures.get(textureKey).getAsString());
-            }
-
-            JsonModel.Element[] elements = context.deserialize(json.getAsJsonObject().get("elements"), JsonModel.Element[].class);
-
-            return new BlockModelData(type, texturesMap, json.getAsJsonObject().get("full").getAsBoolean(), elements);
-        }
     }
 }

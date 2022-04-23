@@ -9,7 +9,7 @@ public class Blocks {
     public static Block ANVIL;
 
     public static void init() {
-        AIR = Registry.BLOCK.register("air", new Air());
+        AIR = Registry.BLOCK.register("air", new AirBlock());
         COBBLESTONE = Registry.BLOCK.register("cobblestone", new Block());
         TEST_BLOCK = Registry.BLOCK.register("test_block", new TestBlock());
         ANVIL = Registry.BLOCK.register("anvil", new Block());
