@@ -1,11 +1,13 @@
 package mpeciakk.model;
 
-import com.google.gson.JsonObject;
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.data.Texture;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Model {
     private final String type;
@@ -23,7 +25,7 @@ public class Model {
             textures.put(textureKey, AssetManager.INSTANCE.get(AssetType.Texture, rawTextures.get(textureKey)));
         }
 
-        if (!type.equals("cube")) {
+        if (!type.equals("cube") && !type.equals("empty")) {
             for (JsonModel.Element element : jsonModel.getElements()) {
                 addPart(new ModelPart(this, element));
             }

@@ -27,7 +27,7 @@ public class DefaultBlockRenderer extends BlockRenderer {
 
             for (ModelPart part : model.getParts()) {
                 try {
-                    part.draw(complexMeshBuilder, new Vector3f(position.asVector()));
+                    part.draw(complexMeshBuilder, new Vector3f(localPosition.asVector()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -36,22 +36,22 @@ public class DefaultBlockRenderer extends BlockRenderer {
             SimpleMeshBuilder simpleMeshBuilder = ((SimpleMeshBuilder) meshBuilder);
 
             BlockState northBlock = world.getBlock(new BlockPos(position).offset(Direction.NORTH));
-            boolean renderNorth = northBlock == null || !northBlock.getModel().getType().equals("full");
+            boolean renderNorth = northBlock == null || !northBlock.getModel().getType().equals("cube");
 
             BlockState southBlock = world.getBlock(new BlockPos(position).offset(Direction.SOUTH));
-            boolean renderSouth = southBlock == null || !southBlock.getModel().getType().equals("full");
+            boolean renderSouth = southBlock == null || !southBlock.getModel().getType().equals("cube");
 
             BlockState eastBlock = world.getBlock(new BlockPos(position).offset(Direction.EAST));
-            boolean renderEast = eastBlock == null || !eastBlock.getModel().getType().equals("full");
+            boolean renderEast = eastBlock == null || !eastBlock.getModel().getType().equals("cube");
 
             BlockState westBlock = world.getBlock(new BlockPos(position).offset(Direction.WEST));
-            boolean renderWest = westBlock == null || !westBlock.getModel().getType().equals("full");
+            boolean renderWest = westBlock == null || !westBlock.getModel().getType().equals("cube");
 
             BlockState upBlock = world.getBlock(new BlockPos(position).offset(Direction.UP));
-            boolean renderUp = upBlock == null || !upBlock.getModel().getType().equals("full");
+            boolean renderUp = upBlock == null || !upBlock.getModel().getType().equals("cube");
 
             BlockState downBlock = world.getBlock(new BlockPos(position).offset(Direction.DOWN));
-            boolean renderDown = downBlock == null || !downBlock.getModel().getType().equals("full");
+            boolean renderDown = downBlock == null || !downBlock.getModel().getType().equals("cube");
 
             Texture front = model.getTextures().get("front");
             Texture back = model.getTextures().get("back");

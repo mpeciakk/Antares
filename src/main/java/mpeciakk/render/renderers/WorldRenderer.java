@@ -3,6 +3,7 @@ package mpeciakk.render.renderers;
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.TextureAtlas;
+import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
 import mpeciakk.shader.ChunkShader;
 import mpeciakk.shader.ComplexShader;
 import mpeciakk.util.Destroyable;

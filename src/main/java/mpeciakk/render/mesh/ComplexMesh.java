@@ -39,8 +39,6 @@ public class ComplexMesh extends Mesh<Vertex> {
         vertices.clear();
         uvs.clear();
 
-        System.out.println("takl");
-
         stop();
 
         flushed = true;

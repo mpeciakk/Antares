@@ -1,7 +1,6 @@
 {
   "type": "complex",
   "textures": {
-    "particle": "anvil",
     "body": "anvil"
   },
   "elements": [

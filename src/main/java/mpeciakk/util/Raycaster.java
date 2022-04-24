@@ -1,7 +1,7 @@
 package mpeciakk.util;
 
-import mpeciakk.block.state.BlockState;
 import mpeciakk.block.Blocks;
+import mpeciakk.block.state.BlockState;
 import mpeciakk.world.World;
 import org.joml.Vector3f;
 import org.joml.Vector3i;

@@ -1,19 +1,19 @@
 package mpeciakk.world;
 
 import de.articdive.jnoise.JNoise;
-import mpeciakk.util.BlockPos;
-import mpeciakk.block.state.BlockState;
 import mpeciakk.block.Blocks;
+import mpeciakk.block.state.BlockState;
+import mpeciakk.util.BlockPos;
+import mpeciakk.util.Destroyable;
 import mpeciakk.world.chunk.Chunk;
 import mpeciakk.world.chunk.ChunkMeshState;
-import org.joml.Vector3i;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class World {
+public class World implements Destroyable {
 
     private final List<Chunk> chunks = new ArrayList<>();
     private final JNoise noise = JNoise.newBuilder().perlin().setFrequency(0.01).build();
@@ -21,8 +21,8 @@ public class World {
     private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
 
     public World() {
-        for (int x = 0; x < 1; x++) {
-            for (int z = 0; z < 1; z++) {
+        for (int x = 0; x < 8; x++) {
+            for (int z = 0; z < 8; z++) {
                 chunks.add(new Chunk(x, z, this));
             }
         }
@@ -94,5 +94,11 @@ public class World {
 
     public JNoise getNoise() {
         return noise;
+    }
+
+    @Override
+    public void destroy() {
+        threadPool.shutdown();
+        threadPool.shutdownNow();
     }
 }

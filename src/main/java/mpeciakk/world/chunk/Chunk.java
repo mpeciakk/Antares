@@ -1,15 +1,14 @@
 package mpeciakk.world.chunk;
 
-import mpeciakk.util.BlockPos;
-import mpeciakk.block.state.BlockState;
 import mpeciakk.block.Blocks;
+import mpeciakk.block.state.BlockState;
 import mpeciakk.render.mesh.ComplexMesh;
 import mpeciakk.render.mesh.SimpleMesh;
 import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
 import mpeciakk.render.mesh.builder.SimpleMeshBuilder;
+import mpeciakk.util.BlockPos;
 import mpeciakk.world.World;
 import org.joml.Matrix4f;
-import org.joml.Vector3i;
 
 public class Chunk {
 
@@ -45,38 +44,17 @@ public class Chunk {
             }
         }
 
-//        setBlock(0, 0, 0, Blocks.ANVIL.getDefaultState());
-//        setBlock(2, 0, 0, Blocks.ANVIL.getDefaultState());
-        setBlock(3, 0, 0, Blocks.COBBLESTONE.getDefaultState());
-        setBlock(1, 0, 0, Blocks.TEST_BLOCK.getDefaultState());
-//
-//        for (int x = 0; x < CHUNK_SIZE; x++) {
-//            for (int z = 0; z < CHUNK_SIZE; z++) {
-//                setBlock(x, (int) world.getNoise().generateHeight(x + this.x * CHUNK_SIZE, z + this.z * CHUNK_SIZE) + 20, z, Blocks.COBBLESTONE);
-//            }
-//        }
-
-        for (int x = 0; x < CHUNK_SIZE; x++) {
-            for (int y = 0; y < 256; y++) {
-                for (int z = 0; z < CHUNK_SIZE; z++) {
-                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.2) {
-                        setBlock(x, y - 18, z, Blocks.COBBLESTONE.getDefaultState());
-                    }
-                }
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                setBlock(x, 0, z, Blocks.COBBLESTONE.getDefaultState());
             }
         }
 
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
-//            for (int z = 0; z < CHUNK_SIZE; z++) {
-//                setBlock(x, 0, z, Blocks.COBBLESTONE);
-//            }
-//        }
-
-//        for (int x = 0; x < CHUNK_SIZE; x++) {
-//            for (int y = 0; y < 255; y++) {
+//            for (int y = 0; y < 256; y++) {
 //                for (int z = 0; z < CHUNK_SIZE; z++) {
-//                    if ((x + y + z) % 2 == 0) {
-//                        setBlock(x, y, z, Blocks.COBBLESTONE);
+//                    if (world.getNoise().getNoise(x + this.x * CHUNK_SIZE, y, z + this.z * CHUNK_SIZE) > 0.2) {
+//                        setBlock(x, y - 18, z, Blocks.COBBLESTONE.getDefaultState());
 //                    }
 //                }
 //            }

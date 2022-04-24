@@ -1,17 +1,18 @@
 package mpeciakk.render;
 
 import mpeciakk.MinecraftClient;
-import mpeciakk.util.BlockPos;
 import mpeciakk.block.Blocks;
 import mpeciakk.render.renderers.TextRenderer;
 import mpeciakk.render.renderers.WorldRenderer;
+import mpeciakk.util.BlockPos;
+import mpeciakk.util.Destroyable;
 import mpeciakk.util.Raycaster;
 import mpeciakk.world.World;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class GameRenderer {
+public class GameRenderer implements Destroyable {
 
     private final MinecraftClient client;
     private final World world;
@@ -83,8 +84,10 @@ public class GameRenderer {
         }
     }
 
+    @Override
     public void destroy() {
         worldRenderer.destroy();
+        world.destroy();
     }
 
     public Camera getCamera() {

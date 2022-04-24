@@ -1,6 +1,9 @@
 package mpeciakk.asset;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.google.gson.ToNumberStrategy;
 import com.google.gson.stream.JsonReader;
 import mpeciakk.asset.data.BlockStateData;
 import mpeciakk.asset.data.ShaderData;
@@ -10,11 +13,11 @@ import mpeciakk.model.Model;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AssetLoader {
 

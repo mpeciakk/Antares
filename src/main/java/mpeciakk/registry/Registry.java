@@ -4,8 +4,6 @@ import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.data.BlockStateData;
 import mpeciakk.block.Block;
-import mpeciakk.model.JsonModel;
-import mpeciakk.model.ModelPart;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +28,7 @@ public abstract class Registry<T> {
     }
 
     private static class BlockRegistry extends Registry<Block> {
+
         @Override
         public void prepare(String id, Block block) {
             BlockStateData stateData = AssetManager.INSTANCE.get(AssetType.BlockState, id);

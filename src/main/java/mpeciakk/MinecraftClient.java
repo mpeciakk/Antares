@@ -1,16 +1,16 @@
 package mpeciakk;
 
 import mpeciakk.asset.AssetLoader;
-import mpeciakk.asset.AssetManager;
+import mpeciakk.block.Blocks;
 import mpeciakk.debug.DebugTools;
 import mpeciakk.font.FontManager;
 import mpeciakk.input.InputManager;
 import mpeciakk.render.GameRenderer;
 import mpeciakk.window.Window;
 import mpeciakk.world.World;
-import mpeciakk.block.Blocks;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 public class MinecraftClient {
 

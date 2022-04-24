@@ -3,8 +3,7 @@ package mpeciakk.debug;
 import mpeciakk.MinecraftClient;
 import org.lwjgl.opengl.GL11;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F1;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F2;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class DebugTools {
 
