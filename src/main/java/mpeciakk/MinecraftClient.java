@@ -3,7 +3,6 @@ package mpeciakk;
 import mpeciakk.asset.AssetLoader;
 import mpeciakk.block.Blocks;
 import mpeciakk.debug.DebugTools;
-import mpeciakk.font.FontManager;
 import mpeciakk.input.InputManager;
 import mpeciakk.render.GameRenderer;
 import mpeciakk.window.Window;
@@ -22,7 +21,6 @@ public class MinecraftClient {
     private InputManager inputManager;
 
     private World world;
-    private FontManager fontManager;
     private GameRenderer gameRenderer;
 
     private int fps;
@@ -49,8 +47,6 @@ public class MinecraftClient {
 
         world = new World();
         world.generate();
-
-        fontManager = new FontManager();
 
         gameRenderer = new GameRenderer(this, world);
 
@@ -92,10 +88,6 @@ public class MinecraftClient {
 
     public InputManager getInputManager() {
         return inputManager;
-    }
-
-    public FontManager getFontManager() {
-        return fontManager;
     }
 
     public int getFps() {

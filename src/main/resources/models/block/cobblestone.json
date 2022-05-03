@@ -1,11 +1,11 @@
 {
   "type": "cube",
   "textures": {
-    "front": "cobblestone",
+    "front": "acacia_log",
     "back": "cobblestone",
     "left": "dirt",
-    "right": "dirt",
-    "bottom": "cobblestone",
-    "top": "dirt"
+    "right": "bedrock",
+    "bottom": "barrel_side",
+    "top": "anvil"
   }
 }

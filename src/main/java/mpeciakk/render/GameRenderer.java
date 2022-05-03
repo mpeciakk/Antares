@@ -2,7 +2,6 @@ package mpeciakk.render;
 
 import mpeciakk.MinecraftClient;
 import mpeciakk.block.Blocks;
-import mpeciakk.render.renderers.TextRenderer;
 import mpeciakk.render.renderers.WorldRenderer;
 import mpeciakk.util.BlockPos;
 import mpeciakk.util.Destroyable;
@@ -19,7 +18,6 @@ public class GameRenderer implements Destroyable {
 
     private final Camera camera;
 
-    private final TextRenderer textRenderer;
     private final WorldRenderer worldRenderer;
 
     private final Raycaster raycaster;
@@ -34,7 +32,6 @@ public class GameRenderer implements Destroyable {
 
         this.camera = new Camera(client.getWindow().getWidth(), client.getWindow().getHeight());
 
-        this.textRenderer = new TextRenderer(client.getFontManager());
         this.worldRenderer = new WorldRenderer();
 
         this.raycaster = new Raycaster();
@@ -47,8 +44,8 @@ public class GameRenderer implements Destroyable {
     public void render() {
         camera.update();
 
-        glClearColor(0, 0, 1.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0, 0, 1.0f, 0.0f);
 
         worldRenderer.render(world);
 

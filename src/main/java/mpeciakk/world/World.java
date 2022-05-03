@@ -21,8 +21,8 @@ public class World implements Destroyable {
     private final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
 
     public World() {
-        for (int x = 0; x < 8; x++) {
-            for (int z = 0; z < 8; z++) {
+        for (int x = 0; x < 1; x++) {
+            for (int z = 0; z < 1; z++) {
                 chunks.add(new Chunk(x, z, this));
             }
         }

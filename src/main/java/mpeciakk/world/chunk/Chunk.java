@@ -50,6 +50,8 @@ public class Chunk {
             }
         }
 
+//        setBlock(0, 0, 0, Blocks.COBBLESTONE.getDefaultState());
+
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int y = 0; y < 256; y++) {
 //                for (int z = 0; z < CHUNK_SIZE; z++) {

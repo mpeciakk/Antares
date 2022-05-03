@@ -7,17 +7,23 @@ out vec3 out_vertexPos;
 
 out float outline;
 
+out vec3 surfaceNormal;
+out vec3 directionTowardsLight;
+
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 transformationMatrix;
 uniform ivec3 highlightedBlock;
 
+uniform vec3 lightPosition;
+
 void main() {
     float x = position & 0x1F;
-    int y = (position >> 5 & 0x1FF) - 256;
+    int y = (position >> 5 & 0x1FF);
     float z = position >> 14 & 0x1F;
     float uv = position >> 19 & 0x7;
-    float tid = position >> 22 & 0x7;
+    float n = position >> 22 & 0x7;
+    float tid = position >> 25 & 0x7;
 
     out_vertexPos = vec3(x, y, z);
 
@@ -59,6 +65,26 @@ void main() {
         outline = 0f;
     }
 
+    vec3 normal = vec3(0, 0, 0);
+
+    if (n == 0.0) {
+        normal = vec3(0, 0, -1);
+    } else if (n == 1.0) {
+        normal = vec3(0, 0, 1);
+    } else if (n == 2.0) {
+        normal = vec3(-1, 0, 0);
+    } else if (n == 3.0) {
+        normal = vec3(1, 0, 0);
+    } else if (n == 4.0) {
+        normal = vec3(0, -1, 0);
+    } else if (n == 5.0) {
+        normal = vec3(0, 1, 0);
+    }
+
+    vec3 vertexPosition = (transformationMatrix * vec4(out_vertexPos, 1.0)).xyz;
+    surfaceNormal = normal;
+    directionTowardsLight = lightPosition - vertexPosition;
+
     gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(out_vertexPos, 1);
 }
 
@@ -70,7 +96,12 @@ in float outline;
 
 out vec4 out_Color;
 
+in vec3 surfaceNormal;
+in vec3 directionTowardsLight;
+
 uniform sampler2D sampler;
+
+uniform vec3 lightColor;
 
 void main() {
     float epsilona = 0.025;
@@ -86,6 +117,13 @@ void main() {
     bool overY = (yy >= -epsilonb && yy <= epsilonb);
     bool overZ = (zz >= -epsilonb && zz <= epsilonb);
 
+    vec3 unitNormal = normalize(surfaceNormal);
+    vec3 unitLightVector = normalize(directionTowardsLight);
+
+    float diffuseFactor = dot(unitNormal, unitLightVector);
+    float brightness = max(diffuseFactor, 0.0);
+    vec3 diffuse = lightColor * diffuseFactor * brightness;
+
     if (outline > 0.995) {
         //        if ((nearX && !overX) || (nearY && !overY) || (nearZ && !overZ)) {
         //            out_Color = vec4(0, 0, 0, 1.0);
@@ -95,7 +133,7 @@ void main() {
 
         out_Color = texture(sampler, out_textureCoords) * vec4(0.3, 0.3, 0.3, 1f);
     } else {
-        out_Color = texture(sampler, out_textureCoords);
+        out_Color = vec4(diffuse, 1.0) * texture(sampler, out_textureCoords);
     }
 }
 
