@@ -1,17 +1,19 @@
-#ifdef VERTEX
+varying vec2 out_textureCoords;
+varying vec3 out_vertexPos;
 
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec2 textureCoords;
-
-out vec2 out_textureCoords;
-out vec3 out_vertexPos;
-
-out float outline;
+varying float outline;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 transformationMatrix;
 uniform ivec3 highlightedBlock;
+
+uniform sampler2D sampler;
+
+#section VERTEX_SHADER
+
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 textureCoords;
 
 void main() {
     int x = int(floor(position.x));
@@ -45,15 +47,9 @@ void main() {
     gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
 }
 
-#else
-
-in vec2 out_textureCoords;
-in vec3 out_vertexPos;
-in float outline;
+#section FRAGMENT_SHADER
 
 out vec4 out_Color;
-
-uniform sampler2D sampler;
 
 void main() {
     float epsilona = 0.025;
@@ -75,5 +71,3 @@ void main() {
         out_Color = texture(sampler, out_textureCoords);
     }
 }
-
-#endif

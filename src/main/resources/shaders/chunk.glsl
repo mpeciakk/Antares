@@ -1,21 +1,38 @@
-#ifdef VERTEX
+varying vec2 out_textureCoords;
+varying vec3 vertexPos;
+varying vec3 mvVertexPos;
+varying vec3 normal;
 
-layout(location = 0) in int position;
-
-out vec2 out_textureCoords;
-out vec3 out_vertexPos;
-
-out float outline;
-
-out vec3 surfaceNormal;
-out vec3 directionTowardsLight;
+varying float outline;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 transformationMatrix;
+
 uniform ivec3 highlightedBlock;
 
 uniform vec3 lightPosition;
+
+uniform sampler2D sampler;
+
+struct Attenuation {
+    float constant;
+    float linear;
+    float exponent;
+};
+
+struct PointLight {
+    vec3 color;
+    vec3 position;
+    float intensity;
+    Attenuation att;
+};
+
+uniform PointLight pointLight;
+
+#section VERTEX_SHADER
+
+layout(location = 0) in int position;
 
 void main() {
     float x = position & 0x1F;
@@ -25,7 +42,7 @@ void main() {
     float n = position >> 22 & 0x7;
     float tid = position >> 25 & 0x7;
 
-    out_vertexPos = vec3(x, y, z);
+    vertexPos = vec3(x, y, z);
 
     float m = 16.0;
 
@@ -42,7 +59,8 @@ void main() {
         out_textureCoords = vec2(1.0 + col, 0.0 + row) / m;
     }
 
-    if ((highlightedBlock.x != 2137 && highlightedBlock.y != 2137 && highlightedBlock.z != 2137) && (
+    if (
+        (highlightedBlock.x != 2137 && highlightedBlock.y != 2137 && highlightedBlock.z != 2137) && (
         // 0, 0, 0
         (x == highlightedBlock.x && y == highlightedBlock.y && z == highlightedBlock.z) ||
         // 1, 0, 0
@@ -65,7 +83,7 @@ void main() {
         outline = 0f;
     }
 
-    vec3 normal = vec3(0, 0, 0);
+    normal = vec3(0, 0, 0);
 
     if (n == 0.0) {
         normal = vec3(0, 0, -1);
@@ -81,60 +99,51 @@ void main() {
         normal = vec3(0, 1, 0);
     }
 
-    vec3 vertexPosition = (transformationMatrix * vec4(out_vertexPos, 1.0)).xyz;
-    surfaceNormal = normal;
-    directionTowardsLight = lightPosition - vertexPosition;
+    mvVertexPos = (transformationMatrix * vec4(vertexPos, 1.0)).xyz;
 
-    gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(out_vertexPos, 1);
+    gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(vertexPos, 1);
 }
 
-#else
-
-in vec2 out_textureCoords;
-in vec3 out_vertexPos;
-in float outline;
+#section FRAGMENT_SHADER
 
 out vec4 out_Color;
 
-in vec3 surfaceNormal;
-in vec3 directionTowardsLight;
+vec4 calcPointLight(PointLight light, vec3 position, vec3 normal, vec4 texture) {
+    float reflectance = 1;
 
-uniform sampler2D sampler;
+    // Diffuse Light
+    vec3 toLightDirection = light.position - position;
+    vec3 unitToLightDirection = normalize(toLightDirection);
+    float diffuseFactor = dot(normal, unitToLightDirection);
+    vec4 diffuseColor = texture * vec4(light.color, 1.0) * diffuseFactor * max(diffuseFactor, 0.0);
 
-uniform vec3 lightColor;
+    // Specular Light
+    vec3 toCameraDirection = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - position.xyz;
+    vec3 unitToCameraDirection = normalize(toCameraDirection);
 
-void main() {
-    float epsilona = 0.025;
-    float epsilonb = 0.0001;
+    vec3 fromLightDirection = -unitToLightDirection;
 
-    float xx = fract(out_vertexPos.x);
-    float yy = fract(out_vertexPos.y);
-    float zz = fract(out_vertexPos.z);
-    bool nearX = (xx >= -epsilona && xx <= epsilona);
-    bool nearY = (yy >= -epsilona && yy <= epsilona);
-    bool nearZ = (zz >= -epsilona && zz <= epsilona);
-    bool overX = (xx >= -epsilonb && xx <= epsilonb);
-    bool overY = (yy >= -epsilonb && yy <= epsilonb);
-    bool overZ = (zz >= -epsilonb && zz <= epsilonb);
+    vec3 reflectedLight = reflect(fromLightDirection, normal);
 
-    vec3 unitNormal = normalize(surfaceNormal);
-    vec3 unitLightVector = normalize(directionTowardsLight);
+    float specularFactor = dot(reflectedLight, unitToCameraDirection);
+    specularFactor = max(specularFactor, 0.0);
+    specularFactor = pow(specularFactor, 10.0);
+    vec4 specularColor = texture * specularFactor * reflectance * vec4(light.color, 1.0);
 
-    float diffuseFactor = dot(unitNormal, unitLightVector);
-    float brightness = max(diffuseFactor, 0.0);
-    vec3 diffuse = lightColor * diffuseFactor * brightness;
+    // Attenuation
+    float distance = length(toLightDirection);
+    float attenuationInv = light.att.constant + light.att.linear * distance + light.att.exponent * distance * distance;
 
-    if (outline > 0.995) {
-        //        if ((nearX && !overX) || (nearY && !overY) || (nearZ && !overZ)) {
-        //            out_Color = vec4(0, 0, 0, 1.0);
-        //        } else {
-        //            out_Color = texture(sampler, out_textureCoords);
-        //        }
-
-        out_Color = texture(sampler, out_textureCoords) * vec4(0.3, 0.3, 0.3, 1f);
-    } else {
-        out_Color = vec4(diffuse, 1.0) * texture(sampler, out_textureCoords);
-    }
+    return (diffuseColor + specularColor) / attenuationInv;
 }
 
-#endif
+void main() {
+    vec4 light = calcPointLight(pointLight, mvVertexPos, normalize(normal), texture(sampler, out_textureCoords));
+    vec4 ambient = vec4(0, 0, 0, 1.0);
+
+    if (outline > 0.995) {
+        out_Color = texture(sampler, out_textureCoords) * vec4(0.3, 0.3, 0.3, 1f);
+    } else {
+        out_Color = ambient * texture(sampler, out_textureCoords) + light;
+    }
+}

@@ -22,8 +22,10 @@ public abstract class Shader {
     private FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public Shader(ShaderData shaderData) {
-        this.vertexId = loadShader("#version 400 core\n#define VERTEX\n" + shaderData.content(), GL_VERTEX_SHADER);
-        this.fragmentId = loadShader("#version 400 core\n#define FRAGMENT\n" + shaderData.content(), GL_FRAGMENT_SHADER);
+        GlslPreprocessor glslPreprocessor = new GlslPreprocessor();
+
+        this.vertexId = loadShader("#version 400 core\n#define VERTEX\n" + glslPreprocessor.process(shaderData.content()), GL_VERTEX_SHADER);
+        this.fragmentId = loadShader("#version 400 core\n#define FRAGMENT\n" + glslPreprocessor.process(shaderData.content()), GL_FRAGMENT_SHADER);
 
         this.programId = glCreateProgram();
 

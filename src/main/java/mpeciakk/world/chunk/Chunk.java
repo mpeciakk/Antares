@@ -44,13 +44,13 @@ public class Chunk {
             }
         }
 
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                setBlock(x, 0, z, Blocks.COBBLESTONE.getDefaultState());
-            }
-        }
+//        for (int x = 0; x < 16; x++) {
+//            for (int z = 0; z < 16; z++) {
+//                setBlock(x, 0, z, Blocks.COBBLESTONE.getDefaultState());
+//            }
+//        }
 
-//        setBlock(0, 0, 0, Blocks.COBBLESTONE.getDefaultState());
+        setBlock(0, 0, 0, Blocks.COBBLESTONE.getDefaultState());
 
 //        for (int x = 0; x < CHUNK_SIZE; x++) {
 //            for (int y = 0; y < 256; y++) {

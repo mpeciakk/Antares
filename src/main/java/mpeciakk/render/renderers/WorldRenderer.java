@@ -3,8 +3,8 @@ package mpeciakk.render.renderers;
 import mpeciakk.asset.AssetManager;
 import mpeciakk.asset.AssetType;
 import mpeciakk.asset.TextureAtlas;
-import mpeciakk.light.Light;
-import mpeciakk.render.mesh.Vertex;
+import mpeciakk.light.PointLight;
+import mpeciakk.render.mesh.ComplexMesh;
 import mpeciakk.render.mesh.builder.ComplexMeshBuilder;
 import mpeciakk.shader.ChunkShader;
 import mpeciakk.shader.ComplexShader;
@@ -25,7 +25,7 @@ public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
 
     private final ComplexShader additionalShader;
 
-    private final Light light;
+    private final PointLight light;
 
     private float t;
 
@@ -33,7 +33,7 @@ public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
         super(new ChunkShader());
         this.additionalShader = new ComplexShader();
 
-        this.light = new Light(new Vector3f(8, 5, 8), new Vector3f(1, 1, 1));
+        this.light = new PointLight(new Vector3f(1, 1, 1), new Vector3f(-1, 1, -1), 3.0f, new PointLight.Attenuation(0.1f, 0.1f, 0.1f));
     }
 
     @Override
@@ -64,15 +64,12 @@ public class WorldRenderer extends MeshRenderer<World> implements Destroyable {
             defaultShader.start();
             defaultShader.loadTransformationMatrix(chunk.getTransformationMatrix());
             defaultShader.loadVector("highlightedBlock", chunk.getHighlightedBlock().asVector());
-            defaultShader.loadVector("lightColor", light.getColor());
-            defaultShader.loadVector("lightPosition", light.getPosition());
+            ((ChunkShader) defaultShader).loadPointLight("pointLight", light);
             defaultShader.stop();
 
             additionalShader.start();
             additionalShader.loadTransformationMatrix(chunk.getTransformationMatrix());
             additionalShader.loadVector("highlightedBlock", chunk.getHighlightedBlock().asVector());
-            additionalShader.loadVector("lightColor", light.getColor());
-            additionalShader.loadVector("lightPosition", light.getPosition());
             additionalShader.stop();
 
             if (chunk.getSimpleBlocksMesh().isFlushed()) {
